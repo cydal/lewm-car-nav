@@ -1,7 +1,7 @@
 # LeWM pilot dataset report
 
 - **dataset**: `/home/ubuntu/lewm_runs/pilot_001`
-- **collected**: 2026-10-04T12:42:10  (git `0bed181e26`)
+- **collected**: 2026-10-04T14:11:18  (lewm `b7d9989b13`, simulator `78b582d644`)
 - **schema version**: 2
 - **episodes**: 12 (test 2/train 8/val 2)
 - **transitions**: 5492
@@ -112,19 +112,19 @@ Waypoints reached: 11; crash steps: 8; injected off-nominal steps: 37.
 
 | configuration | steps/s | env.reset (ms) | KiB/step | steps measured |
 |---|---|---|---|---|
-| env.step only (constant action) | 671 | 33 | - | 500 |
-| + scripted policy | 550 | 33 | - | 500 |
-| + vector recording | 542 | 33 | 0.3 | 500 |
-| + RGB capture | 376 | 59 | 12.4 | 500 |
-| + privileged state | 370 | 59 | 12.7 | 500 |
+| env.step only (constant action) | 683 | 33 | - | 500 |
+| + scripted policy | 559 | 33 | - | 500 |
+| + vector recording | 562 | 32 | 0.3 | 500 |
+| + RGB capture | 376 | 58 | 12.4 | 500 |
+| + privileged state | 369 | 59 | 12.7 | 500 |
 
 Cumulative: each row adds one cost to the row above it, so the differences are attributable.
 
-The scripted driver, not the simulator, is what a vector-only collection spends its time on: 671 steps/s for `env.step` alone against 550 with the controller in the loop. Recording on top of that is nearly free.
+The scripted driver, not the simulator, is what a vector-only collection spends its time on: 683 steps/s for `env.step` alone against 559 with the controller in the loop. Recording on top of that is nearly free.
 
-RGB capture costs 1.5x in wall-clock. At the measured 370 steps/s, one million RGB transitions is about 0.8 h in a single process and 13 GB on disk uncompressed -- the number that decides the size of the real collection, and the reason the seed plan was written to be shardable by split and episode index (each episode's seeds are a pure function of `(environment_seed, split, index)`, so N processes can each take a stride without coordinating).
+RGB capture costs 1.5x in wall-clock. At the measured 369 steps/s, one million RGB transitions is about 0.8 h in a single process and 13 GB on disk uncompressed -- the number that decides the size of the real collection, and the reason the seed plan was written to be shardable by split and episode index (each episode's seeds are a pure function of `(environment_seed, split, index)`, so N processes can each take a stride without coordinating).
 
-The pilot itself wrote 71.5 MB (12.7 KiB/transition) in 16 s.
+The pilot itself wrote 71.5 MB (12.7 KiB/transition) in 15 s.
 
 ## 7. Sample frames
 

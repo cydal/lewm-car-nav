@@ -21,7 +21,7 @@
       "valid"
     ]
   },
-  "collected_at": "2026-10-04T12:42:10",
+  "collected_at": "2026-10-04T14:11:18",
   "config": {
     "camera": {
       "cam_dist": 13.0,
@@ -62,7 +62,9 @@
     "show_goal_beacon": true
   },
   "environment": {
-    "git_sha": "0bed181e2683abca16d2b5a489e70e8a732ea8f0",
+    "carnav_git_sha": "78b582d644139f96e93ba19b4c6d70cb94134e0f",
+    "carnav_root": "/home/ubuntu/world_models/Car-Navigation-Env",
+    "git_sha": "b7d9989b13ddc2b04b7f2f359425cebac994e5c5",
     "numpy": "2.2.6",
     "platform": "Linux-6.17.0-1020-aws-x86_64-with-glibc2.39",
     "python": "3.10.21"
@@ -98,7 +100,7 @@
         "fov": 60.0,
         "look_ahead": 9.0
       },
-      "collected_at": "2026-10-04T12:42:10",
+      "collected_at": "2026-10-04T14:11:18",
       "crash_with": "vehicle",
       "dt": 0.05,
       "environment_seed": 20261004,
@@ -202,7 +204,7 @@
         ]
       ],
       "split": "train",
-      "steps_per_s": 368.32977299456064,
+      "steps_per_s": 376.966474744166,
       "targets": [
         [
           178.65548075744684,
@@ -219,7 +221,7 @@
       ],
       "targets_reached": 1,
       "vector_dim": 73,
-      "wall_s": 0.8959362619998501
+      "wall_s": 0.8754094120013178
     },
     {
       "action_repeat": 1,
@@ -251,7 +253,7 @@
         "fov": 60.0,
         "look_ahead": 9.0
       },
-      "collected_at": "2026-10-04T12:42:10",
+      "collected_at": "2026-10-04T14:11:18",
       "crash_with": "building",
       "dt": 0.05,
       "environment_seed": 20261004,
@@ -355,7 +357,7 @@
         ]
       ],
       "split": "train",
-      "steps_per_s": 339.23056595326165,
+      "steps_per_s": 325.2535239814244,
       "targets": [
         [
           118.45379815828785,
@@ -372,7 +374,7 @@
       ],
       "targets_reached": 0,
       "vector_dim": 73,
-      "wall_s": 0.45396852600015336
+      "wall_s": 0.47347680699931516
     },
     {
       "action_repeat": 1,
@@ -404,7 +406,7 @@
         "fov": 60.0,
         "look_ahead": 9.0
       },
-      "collected_at": "2026-10-04T12:42:10",
+      "collected_at": "2026-10-04T14:11:18",
       "crash_with": null,
       "dt": 0.05,
       "environment_seed": 20261004,
@@ -508,7 +510,7 @@
         ]
       ],
       "split": "train",
-      "steps_per_s": 357.7926362593341,
+      "steps_per_s": 376.79556782579493,
       "targets": [
         [
           41.33535571955138,
@@ -525,7 +527,7 @@
       ],
       "targets_reached": 3,
       "vector_dim": 73,
-      "wall_s": 2.177238772000237
+      "wall_s": 2.067434085000059
     },
     {
       "action_repeat": 1,
@@ -557,7 +559,7 @@
         "fov": 60.0,
         "look_ahead": 9.0
       },
-      "collected_at": "2026-10-04T12:42:10",
+      "collected_at": "2026-10-04T14:11:18",
       "crash_with": "building",
       "dt": 0.05,
       "environment_seed": 20261004,
@@ -661,7 +663,7 @@
         ]
       ],
       "split": "train",
-      "steps_per_s": 352.6833213656545,
+      "steps_per_s": 360.579861330605,
       "targets": [
         [
           85.16396019895754,
@@ -678,7 +680,7 @@
       ],
       "targets_reached": 0,
       "vector_dim": 73,
-      "wall_s": 0.5869288040003084
+      "wall_s": 0.5740753219997714
     },
     {
       "action_repeat": 1,
@@ -710,7 +712,7 @@
         "fov": 60.0,
         "look_ahead": 9.0
       },
-      "collected_at": "2026-10-04T12:42:10",
+      "collected_at": "2026-10-04T14:11:18",
       "crash_with": "building",
       "dt": 0.05,
       "environment_seed": 20261004,
@@ -814,7 +816,7 @@
         ]
       ],
       "split": "train",
-      "steps_per_s": 347.11744509694785,
+      "steps_per_s": 353.7485338361519,
       "targets": [
         [
           54.22354628514355,
@@ -831,7 +833,7 @@
       ],
       "targets_reached": 0,
       "vector_dim": 73,
-      "wall_s": 0.5041521319999447
+      "wall_s": 0.49470169699998223
     },
     {
       "action_repeat": 1,
@@ -863,7 +865,7 @@
         "fov": 60.0,
         "look_ahead": 9.0
       },
-      "collected_at": "2026-10-04T12:42:10",
+      "collected_at": "2026-10-04T14:11:18",
       "crash_with": "building",
       "dt": 0.05,
       "environment_seed": 20261004,
@@ -967,7 +969,7 @@
         ]
       ],
       "split": "train",
-      "steps_per_s": 363.4492797110091,
+      "steps_per_s": 378.5000729936573,
       "targets": [
         [
           113.5768781181004,
@@ -984,7 +986,7 @@
       ],
       "targets_reached": 0,
       "vector_dim": 73,
-      "wall_s": 1.499521475000165
+      "wall_s": 1.4398940419996507
     },
     {
       "action_repeat": 1,
@@ -1016,7 +1018,7 @@
         "fov": 60.0,
         "look_ahead": 9.0
       },
-      "collected_at": "2026-10-04T12:42:10",
+      "collected_at": "2026-10-04T14:11:18",
       "crash_with": null,
       "dt": 0.05,
       "environment_seed": 20261004,
@@ -1120,7 +1122,7 @@
         ]
       ],
       "split": "train",
-      "steps_per_s": 361.18190085960805,
+      "steps_per_s": 375.4514716593607,
       "targets": [
         [
           169.33242467160798,
@@ -1137,7 +1139,7 @@
       ],
       "targets_reached": 3,
       "vector_dim": 73,
-      "wall_s": 2.2758615480001936
+      "wall_s": 2.189364170999397
     },
     {
       "action_repeat": 1,
@@ -1169,7 +1171,7 @@
         "fov": 60.0,
         "look_ahead": 9.0
       },
-      "collected_at": "2026-10-04T12:42:10",
+      "collected_at": "2026-10-04T14:11:18",
       "crash_with": "building",
       "dt": 0.05,
       "environment_seed": 20261004,
@@ -1273,7 +1275,7 @@
         ]
       ],
       "split": "train",
-      "steps_per_s": 391.7086908720152,
+      "steps_per_s": 403.5953395171216,
       "targets": [
         [
           113.87876271626133,
@@ -1290,7 +1292,7 @@
       ],
       "targets_reached": 0,
       "vector_dim": 73,
-      "wall_s": 0.7454519309999341
+      "wall_s": 0.7234969569999521
     },
     {
       "action_repeat": 1,
@@ -1322,7 +1324,7 @@
         "fov": 60.0,
         "look_ahead": 9.0
       },
-      "collected_at": "2026-10-04T12:42:10",
+      "collected_at": "2026-10-04T14:11:18",
       "crash_with": "vehicle",
       "dt": 0.05,
       "environment_seed": 20261004,
@@ -1426,7 +1428,7 @@
         ]
       ],
       "split": "val",
-      "steps_per_s": 367.15559435953884,
+      "steps_per_s": 376.9869309213722,
       "targets": [
         [
           17.98874200593669,
@@ -1443,7 +1445,7 @@
       ],
       "targets_reached": 0,
       "vector_dim": 73,
-      "wall_s": 0.397651574000065
+      "wall_s": 0.38728133000040543
     },
     {
       "action_repeat": 1,
@@ -1475,7 +1477,7 @@
         "fov": 60.0,
         "look_ahead": 9.0
       },
-      "collected_at": "2026-10-04T12:42:10",
+      "collected_at": "2026-10-04T14:11:18",
       "crash_with": null,
       "dt": 0.05,
       "environment_seed": 20261004,
@@ -1579,7 +1581,7 @@
         ]
       ],
       "split": "val",
-      "steps_per_s": 388.5882511119533,
+      "steps_per_s": 396.6688791558823,
       "targets": [
         [
           49.63875474865956,
@@ -1596,7 +1598,7 @@
       ],
       "targets_reached": 2,
       "vector_dim": 73,
-      "wall_s": 2.573417999999947
+      "wall_s": 2.5209943420013587
     },
     {
       "action_repeat": 1,
@@ -1628,7 +1630,7 @@
         "fov": 60.0,
         "look_ahead": 9.0
       },
-      "collected_at": "2026-10-04T12:42:10",
+      "collected_at": "2026-10-04T14:11:18",
       "crash_with": "building",
       "dt": 0.05,
       "environment_seed": 20261004,
@@ -1732,7 +1734,7 @@
         ]
       ],
       "split": "test",
-      "steps_per_s": 386.45914509967776,
+      "steps_per_s": 391.3869012962445,
       "targets": [
         [
           29.95625201488352,
@@ -1749,7 +1751,7 @@
       ],
       "targets_reached": 0,
       "vector_dim": 73,
-      "wall_s": 0.10867901699975846
+      "wall_s": 0.10731069399844273
     },
     {
       "action_repeat": 1,
@@ -1781,7 +1783,7 @@
         "fov": 60.0,
         "look_ahead": 9.0
       },
-      "collected_at": "2026-10-04T12:42:10",
+      "collected_at": "2026-10-04T14:11:18",
       "crash_with": null,
       "dt": 0.05,
       "environment_seed": 20261004,
@@ -1885,7 +1887,7 @@
         ]
       ],
       "split": "test",
-      "steps_per_s": 366.5222385907701,
+      "steps_per_s": 371.7157860207752,
       "targets": [
         [
           130.7756854703731,
@@ -1902,7 +1904,7 @@
       ],
       "targets_reached": 2,
       "vector_dim": 73,
-      "wall_s": 2.72834740899998
+      "wall_s": 2.6902274200001557
     }
   ],
   "n_episodes": 12,
@@ -1987,11 +1989,11 @@
     ]
   },
   "throughput": {
-    "bytes_on_disk": 71527804,
-    "bytes_per_transition": 13023.99927166788,
-    "episodes_per_s": 0.7525435325624337,
-    "transitions_per_s": 344.4140900694071,
-    "wall_s": 15.945921372999692
+    "bytes_on_disk": 71527800,
+    "bytes_per_transition": 13023.998543335761,
+    "episodes_per_s": 0.7769779364957657,
+    "transitions_per_s": 355.5969022695621,
+    "wall_s": 15.44445400099903
   },
   "vector_dim": 73
 }

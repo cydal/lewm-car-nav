@@ -3,42 +3,42 @@
     {
       "bytes_per_step": null,
       "case": "env.step only (constant action)",
-      "reset_ms": 32.86656699970081,
+      "reset_ms": 33.26683750037773,
       "steps": 500,
-      "steps_per_s": 671.1385379119808,
-      "wall_s": 0.7450026660003459
+      "steps_per_s": 682.5037344834967,
+      "wall_s": 0.7325967239994498
     },
     {
       "bytes_per_step": null,
       "case": "+ scripted policy",
-      "reset_ms": 32.793299000104525,
+      "reset_ms": 32.59765850089025,
       "steps": 500,
-      "steps_per_s": 549.6198045671913,
-      "wall_s": 0.9097197660003076
+      "steps_per_s": 559.0689754577253,
+      "wall_s": 0.8943440290004219
     },
     {
       "bytes_per_step": 318.184,
       "case": "+ vector recording",
-      "reset_ms": 33.083628499753104,
+      "reset_ms": 32.367901000725396,
       "steps": 500,
-      "steps_per_s": 542.1604691328728,
-      "wall_s": 0.9222361799997998
+      "steps_per_s": 562.3726353924711,
+      "wall_s": 0.8890902019993518
     },
     {
       "bytes_per_step": 12655.336,
       "case": "+ RGB capture",
-      "reset_ms": 59.053268500065315,
+      "reset_ms": 58.35087800005567,
       "steps": 500,
-      "steps_per_s": 375.5882668129383,
-      "wall_s": 1.3312449940003717
+      "steps_per_s": 375.6161687451126,
+      "wall_s": 1.3311461049997888
     },
     {
       "bytes_per_step": 13024.808,
       "case": "+ privileged state",
-      "reset_ms": 59.04029399994215,
+      "reset_ms": 58.85676150046493,
       "steps": 500,
-      "steps_per_s": 370.0835142522776,
-      "wall_s": 1.351046401000076
+      "steps_per_s": 368.82888773663,
+      "wall_s": 1.3556421869998303
     }
   ],
   "checks": [
