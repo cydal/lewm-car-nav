@@ -70,6 +70,12 @@ def parse_args():
     p.add_argument("--no-wandb", action="store_true")
     p.add_argument("--log-every", type=int, default=20, help="steps between wandb step-logs")
     p.add_argument("--seed", type=int, default=0)
+    p.add_argument("--init-ckpt", default=None,
+                   help="warm-start model weights from a prior run's checkpoint "
+                        "(optimizer state is not saved, so Adam restarts fresh)")
+    p.add_argument("--start-epoch", type=int, default=1,
+                   help="label for the first epoch of this run, for continuity "
+                        "with --init-ckpt's logs/plots (does not affect training)")
     return p.parse_args()
 
 
@@ -127,6 +133,9 @@ def main():
         predictor_depth=args.predictor_depth, predictor_heads=args.predictor_heads,
         predictor_dim_head=args.predictor_dim_head, predictor_mlp_dim=args.predictor_mlp_dim,
     ).to(device)
+    if args.init_ckpt:
+        model.load_state_dict(torch.load(args.init_ckpt, map_location=device))
+        print(f"warm-started from {args.init_ckpt}")
     sigreg = SIGReg(knots=args.sigreg_knots, num_proj=args.sigreg_num_proj).to(device)
     opt = torch.optim.AdamW(model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
     n_params = sum(p.numel() for p in model.parameters())
@@ -135,7 +144,9 @@ def main():
     os.makedirs(args.ckpt_dir, exist_ok=True)
     global_step = 0
 
-    for epoch in range(1, args.epochs + 1):
+    for i in range(1, args.epochs + 1):
+        epoch = args.start_epoch + i - 1
+        is_last = i == args.epochs
         model.train()
         t0 = time.time()
         epoch_losses = []
@@ -159,7 +170,7 @@ def main():
         train_mean = sum(epoch_losses) / len(epoch_losses)
         msg = f"epoch {epoch:3d}  train/loss={train_mean:.4f}  ({time.time() - t0:.1f}s)"
 
-        if epoch % args.val_every == 0 or epoch == args.epochs:
+        if epoch % args.val_every == 0 or is_last:
             model.eval()
             val_losses, val_pred, val_reg = [], [], []
             with torch.no_grad():
@@ -182,7 +193,7 @@ def main():
 
         print(msg)
 
-        if epoch % args.ckpt_every == 0 or epoch == args.epochs:
+        if epoch % args.ckpt_every == 0 or is_last:
             ckpt_path = os.path.join(args.ckpt_dir, run_name, f"weights_epoch_{epoch}.pt")
             os.makedirs(os.path.dirname(ckpt_path), exist_ok=True)
             torch.save(model.state_dict(), ckpt_path)
