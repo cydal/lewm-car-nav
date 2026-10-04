@@ -9,6 +9,13 @@ itself -- `(pred_emb - tgt_emb).pow(2).mean() + lambda * sigreg(emb)` -- is
 copied verbatim from `le-wm/train.py:lejepa_forward`; everything that isn't
 that five-line formula (the encoder, predictor, action embedder, SIGReg
 module itself) is theirs, imported, not reimplemented.
+
+Data loading goes through `fast_loader.WindowedTensorDataset`, not
+`stable_worldmodel`'s `HDF5Dataset`/`DataLoader` -- see that module's
+docstring. On a first run with the generic path, GPU utilization sat at
+~67% with ~460 MiB of 15 GiB used: the model is tiny and the dataset is
+tens of MB, so a one-Python-call-per-sample loader was the bottleneck, not
+compute. The vectorized gather removed it.
 """
 
 import argparse
@@ -26,16 +33,13 @@ import torch  # noqa: E402
 # nothing here.
 torch.backends.cudnn.enabled = False
 
-from torch.utils.data import DataLoader  # noqa: E402
-
 from lewm.paths import add_lewm_official_to_path  # noqa: E402
+from stage1_vector.fast_loader import WindowedTensorDataset  # noqa: E402
 from stage1_vector.model import build_model  # noqa: E402
 from stage1_vector.wandb_env import load_wandb_key  # noqa: E402
 
 add_lewm_official_to_path()
 from module import SIGReg  # noqa: E402
-
-from stable_worldmodel.data.formats.hdf5 import HDF5Dataset  # noqa: E402
 
 
 def parse_args():
@@ -54,7 +58,7 @@ def parse_args():
     p.add_argument("--sigreg-weight", type=float, default=0.09)
     p.add_argument("--sigreg-knots", type=int, default=17)
     p.add_argument("--sigreg-num-proj", type=int, default=1024)
-    p.add_argument("--batch-size", type=int, default=128)
+    p.add_argument("--batch-size", type=int, default=512)
     p.add_argument("--epochs", type=int, default=20)
     p.add_argument("--lr", type=float, default=5e-4)
     p.add_argument("--weight-decay", type=float, default=1e-3)
@@ -69,18 +73,8 @@ def parse_args():
     return p.parse_args()
 
 
-def make_loader(h5_path, num_steps, batch_size, shuffle):
-    ds = HDF5Dataset(
-        path=h5_path, frameskip=1, num_steps=num_steps,
-        keys_to_load=["state", "action"], keys_to_cache=["state", "action"],
-    )
-    loader = DataLoader(ds, batch_size=batch_size, shuffle=shuffle,
-                         drop_last=shuffle, num_workers=0)
-    return ds, loader
-
-
-def forward_loss(model, sigreg, batch, device, history_size, num_preds, lambd):
-    batch = {k: v.to(device) for k, v in batch.items()}
+def forward_loss(model, sigreg, batch, history_size, num_preds, lambd):
+    batch = dict(batch)
     batch["action"] = torch.nan_to_num(batch["action"], 0.0)
 
     out = model.encode(batch)
@@ -114,15 +108,20 @@ def main():
         wandb.init(project=args.wandb_project, name=run_name, config=vars(args))
 
     num_steps = args.history_size + args.num_preds
-    train_ds, train_loader = make_loader(args.train_h5, num_steps, args.batch_size, shuffle=True)
-    val_ds, val_loader = make_loader(args.val_h5, num_steps, args.batch_size, shuffle=False)
-    print(f"train windows: {len(train_ds)}  val windows: {len(val_ds)}  "
-          f"({num_steps}-step windows, state_dim={train_ds.get_dim('state')}, "
-          f"action_dim={train_ds.get_dim('action')})")
-
     device = "cuda" if torch.cuda.is_available() else "cpu"
+
+    # Whole dataset lives on `device` as two tensors (state, action); batches
+    # are gathered with one vectorized index op instead of one Python call
+    # per sample -- see fast_loader.py. Both train and val arrays here are
+    # tens of MB; this would need rethinking well before it stopped fitting.
+    train_ds = WindowedTensorDataset(args.train_h5, num_steps, device=device)
+    val_ds = WindowedTensorDataset(args.val_h5, num_steps, device=device)
+    print(f"train windows: {len(train_ds)}  val windows: {len(val_ds)}  "
+          f"({num_steps}-step windows, state_dim={train_ds.state_dim}, "
+          f"action_dim={train_ds.action_dim})")
+
     model = build_model(
-        state_dim=train_ds.get_dim("state"), action_dim=train_ds.get_dim("action"),
+        state_dim=train_ds.state_dim, action_dim=train_ds.action_dim,
         embed_dim=args.embed_dim, history_size=args.history_size,
         encoder_hidden=args.encoder_hidden, encoder_depth=args.encoder_depth,
         predictor_depth=args.predictor_depth, predictor_heads=args.predictor_heads,
@@ -140,9 +139,9 @@ def main():
         model.train()
         t0 = time.time()
         epoch_losses = []
-        for batch in train_loader:
+        for batch in train_ds.epoch_batches(args.batch_size, shuffle=True, drop_last=True):
             loss, pred_loss, reg_loss = forward_loss(
-                model, sigreg, batch, device, args.history_size, args.num_preds, args.sigreg_weight)
+                model, sigreg, batch, args.history_size, args.num_preds, args.sigreg_weight)
             opt.zero_grad()
             loss.backward()
             opt.step()
@@ -164,9 +163,9 @@ def main():
             model.eval()
             val_losses, val_pred, val_reg = [], [], []
             with torch.no_grad():
-                for batch in val_loader:
+                for batch in val_ds.epoch_batches(args.batch_size, shuffle=False, drop_last=False):
                     loss, pred_loss, reg_loss = forward_loss(
-                        model, sigreg, batch, device, args.history_size, args.num_preds,
+                        model, sigreg, batch, args.history_size, args.num_preds,
                         args.sigreg_weight)
                     val_losses.append(loss.item())
                     val_pred.append(pred_loss.item())
