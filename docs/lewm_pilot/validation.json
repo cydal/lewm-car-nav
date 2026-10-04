@@ -1,0 +1,364 @@
+{
+  "benchmark": [
+    {
+      "bytes_per_step": null,
+      "case": "env.step only (constant action)",
+      "reset_ms": 32.86656699970081,
+      "steps": 500,
+      "steps_per_s": 671.1385379119808,
+      "wall_s": 0.7450026660003459
+    },
+    {
+      "bytes_per_step": null,
+      "case": "+ scripted policy",
+      "reset_ms": 32.793299000104525,
+      "steps": 500,
+      "steps_per_s": 549.6198045671913,
+      "wall_s": 0.9097197660003076
+    },
+    {
+      "bytes_per_step": 318.184,
+      "case": "+ vector recording",
+      "reset_ms": 33.083628499753104,
+      "steps": 500,
+      "steps_per_s": 542.1604691328728,
+      "wall_s": 0.9222361799997998
+    },
+    {
+      "bytes_per_step": 12655.336,
+      "case": "+ RGB capture",
+      "reset_ms": 59.053268500065315,
+      "steps": 500,
+      "steps_per_s": 375.5882668129383,
+      "wall_s": 1.3312449940003717
+    },
+    {
+      "bytes_per_step": 13024.808,
+      "case": "+ privileged state",
+      "reset_ms": 59.04029399994215,
+      "steps": 500,
+      "steps_per_s": 370.0835142522776,
+      "wall_s": 1.351046401000076
+    }
+  ],
+  "checks": [
+    {
+      "detail": "",
+      "name": "every manifest episode exists on disk",
+      "ok": true
+    },
+    {
+      "detail": "",
+      "name": "every episode on disk is in the manifest",
+      "ok": true
+    },
+    {
+      "detail": "",
+      "name": "episode ids are unique",
+      "ok": true
+    },
+    {
+      "detail": "test=2 / train=8 / val=2",
+      "name": "train/val/test episode sets are disjoint",
+      "ok": true
+    },
+    {
+      "detail": "",
+      "name": "episode seeds are unique across the dataset",
+      "ok": true
+    },
+    {
+      "detail": "",
+      "name": "no environment seed is shared between splits",
+      "ok": true
+    },
+    {
+      "detail": "",
+      "name": "observation-side records are action-side + 1",
+      "ok": true
+    },
+    {
+      "detail": "",
+      "name": "timesteps are contiguous from 0",
+      "ok": true
+    },
+    {
+      "detail": "T: min 42 median 311 max 1000",
+      "name": "trajectory lengths are within the episode limit",
+      "ok": true
+    },
+    {
+      "detail": "",
+      "name": "terminated/truncated only on the final step and consistent with `reason`",
+      "ok": true
+    },
+    {
+      "detail": "",
+      "name": "no NaN/Inf in observations, actions, rewards or ground truth",
+      "ok": true
+    },
+    {
+      "detail": "timestep action reward terminated truncated obs_vector rgb privileged",
+      "name": "every episode carries the arrays its config promises",
+      "ok": true
+    },
+    {
+      "detail": "max pose residual 1.87e-05 m over 12 episodes (tol 2e-03)",
+      "name": "obs[t] + action[t] -> obs[t+1] reproduces the car model",
+      "ok": true
+    },
+    {
+      "detail": "shifted residual 8.10e-02 m vs aligned 1.87e-05 m (4323x)",
+      "name": "no off-by-one: shifting the actions by one step breaks it",
+      "ok": true
+    },
+    {
+      "detail": "vector bit-identical; 1/1260 frames with any pixel difference, worst 5/255 (rasteriser tie-breaks, tolerance 8/255 over 0.1% of pixels)",
+      "name": "replaying stored actions from the stored seed reproduces the episode (3 sampled)",
+      "ok": true
+    },
+    {
+      "detail": "[(64, 64, 3, 'uint8')]  (5504 frames)",
+      "name": "RGB frames decode with one consistent shape and dtype",
+      "ok": true
+    },
+    {
+      "detail": "1 distinct configs",
+      "name": "camera configuration is identical across the dataset",
+      "ok": true
+    },
+    {
+      "detail": "show_goal_beacon=[True]",
+      "name": "goal-beacon setting is identical across the dataset",
+      "ok": true
+    },
+    {
+      "detail": "",
+      "name": "no flat/corrupt frames",
+      "ok": true
+    },
+    {
+      "detail": "",
+      "name": "frames change while the car is moving (ordering/staleness)",
+      "ok": true
+    },
+    {
+      "detail": "range -1.000 .. 1.000",
+      "name": "actions are inside the action space [-1, 1]",
+      "ok": true
+    },
+    {
+      "detail": "throttle sd=0.334  brake sd=0.737  steer sd=0.476",
+      "name": "no action channel is degenerate (constant)",
+      "ok": true
+    },
+    {
+      "detail": "steer -1.00 .. 1.00",
+      "name": "steering is exercised in both directions",
+      "ok": true
+    },
+    {
+      "detail": "brake 0.00 .. 1.00 (mean 0.20)",
+      "name": "the brake channel spans both ends of its range",
+      "ok": true
+    },
+    {
+      "detail": "throttle -0.58 .. 1.00 (reverse steps: 242)",
+      "name": "the throttle reaches full forward",
+      "ok": true
+    },
+    {
+      "detail": "sd 3.38 m/s",
+      "name": "speed distribution is non-degenerate",
+      "ok": true
+    },
+    {
+      "detail": "max 0.699 m (limit = max_speed * dt)",
+      "name": "per-step displacement is physically plausible",
+      "ok": true
+    },
+    {
+      "detail": "951/5504 = 17.3%  (floor 0.1%)",
+      "name": "covered: stationary (<0.5 m/s)",
+      "ok": true
+    },
+    {
+      "detail": "401/5504 = 7.3%  (floor 1.0%)",
+      "name": "covered: low speed (0.5-3 m/s)",
+      "ok": true
+    },
+    {
+      "detail": "4005/5504 = 72.8%  (floor 10.0%)",
+      "name": "covered: mid speed (3-10 m/s)",
+      "ok": true
+    },
+    {
+      "detail": "147/5504 = 2.7%  (floor 2.0%)",
+      "name": "covered: high speed (>10 m/s)",
+      "ok": true
+    },
+    {
+      "detail": "1446/5504 = 26.3%  (floor 5.0%)",
+      "name": "covered: straight (|yaw rate| < 0.05)",
+      "ok": true
+    },
+    {
+      "detail": "2809/5504 = 51.0%  (floor 5.0%)",
+      "name": "covered: turning (|yaw rate| > 0.2)",
+      "ok": true
+    },
+    {
+      "detail": "823/5504 = 15.0%  (floor 2.0%)",
+      "name": "covered: braking (accel < -1)",
+      "ok": true
+    },
+    {
+      "detail": "1458/5504 = 26.5%  (floor 2.0%)",
+      "name": "covered: accelerating (accel > 1)",
+      "ok": true
+    },
+    {
+      "detail": "37/5492 = 0.7%  (floor 0.0%)",
+      "name": "covered: off-nominal (injected)",
+      "ok": true
+    },
+    {
+      "detail": "crash steps: 8",
+      "name": "the dataset contains crashes as well as clean driving",
+      "ok": true
+    }
+  ],
+  "ok": true,
+  "stats": {
+    "accel": {
+      "max": 4.926540374755859,
+      "mean": 0.2750316560268402,
+      "min": -10.5120210647583,
+      "sd": 2.5353987216949463
+    },
+    "action": {
+      "brake": {
+        "max": 1.0,
+        "mean": -0.5961955189704895,
+        "min": -1.0,
+        "sd": 0.7365912795066833
+      },
+      "steer": {
+        "max": 1.0,
+        "mean": 0.01566033624112606,
+        "min": -1.0,
+        "sd": 0.4758714437484741
+      },
+      "throttle": {
+        "max": 1.0,
+        "mean": 0.29823043942451477,
+        "min": -0.5797739624977112,
+        "sd": 0.3338748514652252
+      }
+    },
+    "coverage": {
+      "accelerating (accel > 1)": {
+        "floor": 0.02,
+        "frac": 0.2648982558139535,
+        "steps": 1458,
+        "total": 5504
+      },
+      "braking (accel < -1)": {
+        "floor": 0.02,
+        "frac": 0.14952761627906977,
+        "steps": 823,
+        "total": 5504
+      },
+      "high speed (>10 m/s)": {
+        "floor": 0.02,
+        "frac": 0.0267078488372093,
+        "steps": 147,
+        "total": 5504
+      },
+      "low speed (0.5-3 m/s)": {
+        "floor": 0.01,
+        "frac": 0.0728561046511628,
+        "steps": 401,
+        "total": 5504
+      },
+      "mid speed (3-10 m/s)": {
+        "floor": 0.1,
+        "frac": 0.7276526162790697,
+        "steps": 4005,
+        "total": 5504
+      },
+      "off-nominal (injected)": {
+        "floor": 0.0,
+        "frac": 0.0067370721048798255,
+        "steps": 37,
+        "total": 5492
+      },
+      "recovery (25 steps after a burst)": {
+        "floor": null,
+        "frac": 0.013656227239621267,
+        "steps": 75,
+        "total": 5492
+      },
+      "stationary (<0.5 m/s)": {
+        "floor": 0.001,
+        "frac": 0.17278343023255813,
+        "steps": 951,
+        "total": 5504
+      },
+      "straight (|yaw rate| < 0.05)": {
+        "floor": 0.05,
+        "frac": 0.26271802325581395,
+        "steps": 1446,
+        "total": 5504
+      },
+      "turning (|yaw rate| > 0.2)": {
+        "floor": 0.05,
+        "frac": 0.5103561046511628,
+        "steps": 2809,
+        "total": 5504
+      }
+    },
+    "crash_steps": 8,
+    "endings": {
+      "crash": 8,
+      "success": 2,
+      "timeout": 2
+    },
+    "episode_length": {
+      "max": 1000,
+      "mean": 457.6666666666667,
+      "median": 311.0,
+      "min": 42
+    },
+    "injected_steps": 37,
+    "n_episodes": 12,
+    "n_transitions": 5492,
+    "policies": {
+      "aggressive": 3,
+      "competent": 3,
+      "conservative": 2,
+      "intermediate": 1,
+      "noisy_competent": 2,
+      "recovery": 1
+    },
+    "speed": {
+      "max": 13.977686882019043,
+      "mean": 5.550584316253662,
+      "min": -0.08696609735488892,
+      "sd": 3.380735158920288
+    },
+    "steer_angle": {
+      "max": 0.5585053563117981,
+      "mean": 0.009008106775581837,
+      "min": -0.5585053563117981,
+      "sd": 0.2610835134983063
+    },
+    "waypoints_reached": 11,
+    "yaw_rate": {
+      "max": 2.2275872230529785,
+      "mean": -0.02896122634410858,
+      "min": -1.7404881715774536,
+      "sd": 0.481431782245636
+    }
+  }
+}

@@ -1,0 +1,1997 @@
+{
+  "block_columns": {
+    "pedestrian_state": [
+      "x",
+      "y",
+      "vx",
+      "vy",
+      "valid"
+    ],
+    "signal_state": [
+      "phase",
+      "timer",
+      "steps_remaining"
+    ],
+    "traffic_state": [
+      "x",
+      "y",
+      "heading",
+      "speed",
+      "parked",
+      "valid"
+    ]
+  },
+  "collected_at": "2026-10-04T12:42:10",
+  "config": {
+    "camera": {
+      "cam_dist": 13.0,
+      "cam_height": 6.5,
+      "fov": 60.0,
+      "look_ahead": 9.0
+    },
+    "capture_pedestrian_state": true,
+    "capture_privileged_state": true,
+    "capture_rgb": true,
+    "capture_signal_state": true,
+    "capture_traffic_state": true,
+    "capture_vector": true,
+    "compress": false,
+    "env_kwargs": {},
+    "environment_seed": 20261004,
+    "image_size": 64,
+    "max_steps": null,
+    "n_pedestrian_state": 4,
+    "n_test": 2,
+    "n_traffic_state": 8,
+    "n_train": 8,
+    "n_val": 2,
+    "note": "Stage 0 pilot: instrumentation check, not a training dataset.",
+    "observation_mode": "vector_full",
+    "policy_mix": {
+      "aggressive": 0.25,
+      "competent": 0.25,
+      "conservative": 0.2,
+      "intermediate": 0.1,
+      "noisy_competent": 0.15,
+      "recovery": 0.05
+    },
+    "restricted_drop": [
+      "nav",
+      "dynamics"
+    ],
+    "show_goal_beacon": true
+  },
+  "environment": {
+    "git_sha": "0bed181e2683abca16d2b5a489e70e8a732ea8f0",
+    "numpy": "2.2.6",
+    "platform": "Linux-6.17.0-1020-aws-x86_64-with-glibc2.39",
+    "python": "3.10.21"
+  },
+  "episodes": [
+    {
+      "action_repeat": 1,
+      "block_columns": {
+        "pedestrian_state": [
+          "x",
+          "y",
+          "vx",
+          "vy",
+          "valid"
+        ],
+        "signal_state": [
+          "phase",
+          "timer",
+          "steps_remaining"
+        ],
+        "traffic_state": [
+          "x",
+          "y",
+          "heading",
+          "speed",
+          "parked",
+          "valid"
+        ]
+      },
+      "camera": {
+        "cam_dist": 13.0,
+        "cam_height": 6.5,
+        "fov": 60.0,
+        "look_ahead": 9.0
+      },
+      "collected_at": "2026-10-04T12:42:10",
+      "crash_with": "vehicle",
+      "dt": 0.05,
+      "environment_seed": 20261004,
+      "episode_id": "train/ep_000000",
+      "episode_index": 0,
+      "episode_reward": -35.47361503476836,
+      "episode_seed": 1520905813,
+      "image_size": 64,
+      "length": 330,
+      "max_episode_steps": 1000,
+      "n_targets": 3,
+      "obs_slices": {
+        "dynamics": [
+          32,
+          37
+        ],
+        "lidar": [
+          0,
+          32
+        ],
+        "nav": [
+          37,
+          46
+        ],
+        "pedestrians": [
+          73,
+          73
+        ],
+        "signs": [
+          73,
+          73
+        ],
+        "traffic": [
+          53,
+          73
+        ],
+        "traffic_light": [
+          46,
+          53
+        ]
+      },
+      "path": "episodes/train/ep_000000.npz",
+      "policy": "competent",
+      "policy_seed": 2425811429,
+      "privileged_names": [
+        "x",
+        "y",
+        "heading",
+        "speed",
+        "vx",
+        "vy",
+        "accel",
+        "yaw_rate",
+        "steer_angle",
+        "slip",
+        "target_idx",
+        "dist_to_goal",
+        "goal_x",
+        "goal_y",
+        "goal_bearing",
+        "dist_to_obstacle",
+        "dist_to_vehicle",
+        "bearing_to_vehicle",
+        "vehicle_speed",
+        "dist_to_moving_vehicle",
+        "bearing_to_moving_vehicle",
+        "moving_vehicle_speed",
+        "dist_to_signal",
+        "signal_state",
+        "signal_steps_remaining",
+        "red_light_violations"
+      ],
+      "reason": "crash",
+      "red_light_violations": 1,
+      "schema_version": 2,
+      "show_goal_beacon": true,
+      "signal_xy": [
+        [
+          146.0,
+          46.0
+        ],
+        [
+          70.0,
+          126.0
+        ],
+        [
+          178.0,
+          166.0
+        ],
+        [
+          234.0,
+          166.0
+        ],
+        [
+          202.0,
+          102.0
+        ],
+        [
+          110.0,
+          102.0
+        ]
+      ],
+      "split": "train",
+      "steps_per_s": 368.32977299456064,
+      "targets": [
+        [
+          178.65548075744684,
+          174.8428574177431
+        ],
+        [
+          114.32663551715171,
+          102.37515857215132
+        ],
+        [
+          169.16769142928132,
+          98.36988466756625
+        ]
+      ],
+      "targets_reached": 1,
+      "vector_dim": 73,
+      "wall_s": 0.8959362619998501
+    },
+    {
+      "action_repeat": 1,
+      "block_columns": {
+        "pedestrian_state": [
+          "x",
+          "y",
+          "vx",
+          "vy",
+          "valid"
+        ],
+        "signal_state": [
+          "phase",
+          "timer",
+          "steps_remaining"
+        ],
+        "traffic_state": [
+          "x",
+          "y",
+          "heading",
+          "speed",
+          "parked",
+          "valid"
+        ]
+      },
+      "camera": {
+        "cam_dist": 13.0,
+        "cam_height": 6.5,
+        "fov": 60.0,
+        "look_ahead": 9.0
+      },
+      "collected_at": "2026-10-04T12:42:10",
+      "crash_with": "building",
+      "dt": 0.05,
+      "environment_seed": 20261004,
+      "episode_id": "train/ep_000001",
+      "episode_index": 1,
+      "episode_reward": -64.27238168838062,
+      "episode_seed": 3666194415,
+      "image_size": 64,
+      "length": 154,
+      "max_episode_steps": 1000,
+      "n_targets": 3,
+      "obs_slices": {
+        "dynamics": [
+          32,
+          37
+        ],
+        "lidar": [
+          0,
+          32
+        ],
+        "nav": [
+          37,
+          46
+        ],
+        "pedestrians": [
+          73,
+          73
+        ],
+        "signs": [
+          73,
+          73
+        ],
+        "traffic": [
+          53,
+          73
+        ],
+        "traffic_light": [
+          46,
+          53
+        ]
+      },
+      "path": "episodes/train/ep_000001.npz",
+      "policy": "noisy_competent",
+      "policy_seed": 2649205781,
+      "privileged_names": [
+        "x",
+        "y",
+        "heading",
+        "speed",
+        "vx",
+        "vy",
+        "accel",
+        "yaw_rate",
+        "steer_angle",
+        "slip",
+        "target_idx",
+        "dist_to_goal",
+        "goal_x",
+        "goal_y",
+        "goal_bearing",
+        "dist_to_obstacle",
+        "dist_to_vehicle",
+        "bearing_to_vehicle",
+        "vehicle_speed",
+        "dist_to_moving_vehicle",
+        "bearing_to_moving_vehicle",
+        "moving_vehicle_speed",
+        "dist_to_signal",
+        "signal_state",
+        "signal_steps_remaining",
+        "red_light_violations"
+      ],
+      "reason": "crash",
+      "red_light_violations": 0,
+      "schema_version": 2,
+      "show_goal_beacon": true,
+      "signal_xy": [
+        [
+          126.0,
+          98.0
+        ],
+        [
+          126.0,
+          46.0
+        ],
+        [
+          102.0,
+          138.0
+        ],
+        [
+          226.0,
+          46.0
+        ],
+        [
+          198.0,
+          230.0
+        ],
+        [
+          74.0,
+          74.0
+        ]
+      ],
+      "split": "train",
+      "steps_per_s": 339.23056595326165,
+      "targets": [
+        [
+          118.45379815828785,
+          78.79892779621366
+        ],
+        [
+          94.45387064817504,
+          173.73895218007573
+        ],
+        [
+          121.32064896652652,
+          102.87289607133593
+        ]
+      ],
+      "targets_reached": 0,
+      "vector_dim": 73,
+      "wall_s": 0.45396852600015336
+    },
+    {
+      "action_repeat": 1,
+      "block_columns": {
+        "pedestrian_state": [
+          "x",
+          "y",
+          "vx",
+          "vy",
+          "valid"
+        ],
+        "signal_state": [
+          "phase",
+          "timer",
+          "steps_remaining"
+        ],
+        "traffic_state": [
+          "x",
+          "y",
+          "heading",
+          "speed",
+          "parked",
+          "valid"
+        ]
+      },
+      "camera": {
+        "cam_dist": 13.0,
+        "cam_height": 6.5,
+        "fov": 60.0,
+        "look_ahead": 9.0
+      },
+      "collected_at": "2026-10-04T12:42:10",
+      "crash_with": null,
+      "dt": 0.05,
+      "environment_seed": 20261004,
+      "episode_id": "train/ep_000002",
+      "episode_index": 2,
+      "episode_reward": 401.1809384952296,
+      "episode_seed": 2157204638,
+      "image_size": 64,
+      "length": 779,
+      "max_episode_steps": 1000,
+      "n_targets": 3,
+      "obs_slices": {
+        "dynamics": [
+          32,
+          37
+        ],
+        "lidar": [
+          0,
+          32
+        ],
+        "nav": [
+          37,
+          46
+        ],
+        "pedestrians": [
+          73,
+          73
+        ],
+        "signs": [
+          73,
+          73
+        ],
+        "traffic": [
+          53,
+          73
+        ],
+        "traffic_light": [
+          46,
+          53
+        ]
+      },
+      "path": "episodes/train/ep_000002.npz",
+      "policy": "noisy_competent",
+      "policy_seed": 728136116,
+      "privileged_names": [
+        "x",
+        "y",
+        "heading",
+        "speed",
+        "vx",
+        "vy",
+        "accel",
+        "yaw_rate",
+        "steer_angle",
+        "slip",
+        "target_idx",
+        "dist_to_goal",
+        "goal_x",
+        "goal_y",
+        "goal_bearing",
+        "dist_to_obstacle",
+        "dist_to_vehicle",
+        "bearing_to_vehicle",
+        "vehicle_speed",
+        "dist_to_moving_vehicle",
+        "bearing_to_moving_vehicle",
+        "moving_vehicle_speed",
+        "dist_to_signal",
+        "signal_state",
+        "signal_steps_remaining",
+        "red_light_violations"
+      ],
+      "reason": "success",
+      "red_light_violations": 0,
+      "schema_version": 2,
+      "show_goal_beacon": true,
+      "signal_xy": [
+        [
+          166.0,
+          38.0
+        ],
+        [
+          226.0,
+          166.0
+        ],
+        [
+          226.0,
+          38.0
+        ],
+        [
+          130.0,
+          230.0
+        ],
+        [
+          66.0,
+          230.0
+        ],
+        [
+          194.0,
+          202.0
+        ]
+      ],
+      "split": "train",
+      "steps_per_s": 357.7926362593341,
+      "targets": [
+        [
+          41.33535571955138,
+          41.34908748271466
+        ],
+        [
+          94.84410104752678,
+          54.23782691044014
+        ],
+        [
+          34.27541734932916,
+          85.4946393490084
+        ]
+      ],
+      "targets_reached": 3,
+      "vector_dim": 73,
+      "wall_s": 2.177238772000237
+    },
+    {
+      "action_repeat": 1,
+      "block_columns": {
+        "pedestrian_state": [
+          "x",
+          "y",
+          "vx",
+          "vy",
+          "valid"
+        ],
+        "signal_state": [
+          "phase",
+          "timer",
+          "steps_remaining"
+        ],
+        "traffic_state": [
+          "x",
+          "y",
+          "heading",
+          "speed",
+          "parked",
+          "valid"
+        ]
+      },
+      "camera": {
+        "cam_dist": 13.0,
+        "cam_height": 6.5,
+        "fov": 60.0,
+        "look_ahead": 9.0
+      },
+      "collected_at": "2026-10-04T12:42:10",
+      "crash_with": "building",
+      "dt": 0.05,
+      "environment_seed": 20261004,
+      "episode_id": "train/ep_000003",
+      "episode_index": 3,
+      "episode_reward": -63.31307771468436,
+      "episode_seed": 335275660,
+      "image_size": 64,
+      "length": 207,
+      "max_episode_steps": 1000,
+      "n_targets": 3,
+      "obs_slices": {
+        "dynamics": [
+          32,
+          37
+        ],
+        "lidar": [
+          0,
+          32
+        ],
+        "nav": [
+          37,
+          46
+        ],
+        "pedestrians": [
+          73,
+          73
+        ],
+        "signs": [
+          73,
+          73
+        ],
+        "traffic": [
+          53,
+          73
+        ],
+        "traffic_light": [
+          46,
+          53
+        ]
+      },
+      "path": "episodes/train/ep_000003.npz",
+      "policy": "competent",
+      "policy_seed": 4035918266,
+      "privileged_names": [
+        "x",
+        "y",
+        "heading",
+        "speed",
+        "vx",
+        "vy",
+        "accel",
+        "yaw_rate",
+        "steer_angle",
+        "slip",
+        "target_idx",
+        "dist_to_goal",
+        "goal_x",
+        "goal_y",
+        "goal_bearing",
+        "dist_to_obstacle",
+        "dist_to_vehicle",
+        "bearing_to_vehicle",
+        "vehicle_speed",
+        "dist_to_moving_vehicle",
+        "bearing_to_moving_vehicle",
+        "moving_vehicle_speed",
+        "dist_to_signal",
+        "signal_state",
+        "signal_steps_remaining",
+        "red_light_violations"
+      ],
+      "reason": "crash",
+      "red_light_violations": 0,
+      "schema_version": 2,
+      "show_goal_beacon": true,
+      "signal_xy": [
+        [
+          134.0,
+          238.0
+        ],
+        [
+          82.0,
+          106.0
+        ],
+        [
+          162.0,
+          170.0
+        ],
+        [
+          82.0,
+          42.0
+        ],
+        [
+          54.0,
+          238.0
+        ],
+        [
+          202.0,
+          42.0
+        ]
+      ],
+      "split": "train",
+      "steps_per_s": 352.6833213656545,
+      "targets": [
+        [
+          85.16396019895754,
+          137.1504727405573
+        ],
+        [
+          90.4541487508841,
+          202.3413822968364
+        ],
+        [
+          49.4805193604453,
+          202.57697427057983
+        ]
+      ],
+      "targets_reached": 0,
+      "vector_dim": 73,
+      "wall_s": 0.5869288040003084
+    },
+    {
+      "action_repeat": 1,
+      "block_columns": {
+        "pedestrian_state": [
+          "x",
+          "y",
+          "vx",
+          "vy",
+          "valid"
+        ],
+        "signal_state": [
+          "phase",
+          "timer",
+          "steps_remaining"
+        ],
+        "traffic_state": [
+          "x",
+          "y",
+          "heading",
+          "speed",
+          "parked",
+          "valid"
+        ]
+      },
+      "camera": {
+        "cam_dist": 13.0,
+        "cam_height": 6.5,
+        "fov": 60.0,
+        "look_ahead": 9.0
+      },
+      "collected_at": "2026-10-04T12:42:10",
+      "crash_with": "building",
+      "dt": 0.05,
+      "environment_seed": 20261004,
+      "episode_id": "train/ep_000004",
+      "episode_index": 4,
+      "episode_reward": -117.92838251507081,
+      "episode_seed": 1954809972,
+      "image_size": 64,
+      "length": 175,
+      "max_episode_steps": 1000,
+      "n_targets": 3,
+      "obs_slices": {
+        "dynamics": [
+          32,
+          37
+        ],
+        "lidar": [
+          0,
+          32
+        ],
+        "nav": [
+          37,
+          46
+        ],
+        "pedestrians": [
+          73,
+          73
+        ],
+        "signs": [
+          73,
+          73
+        ],
+        "traffic": [
+          53,
+          73
+        ],
+        "traffic_light": [
+          46,
+          53
+        ]
+      },
+      "path": "episodes/train/ep_000004.npz",
+      "policy": "aggressive",
+      "policy_seed": 1660437100,
+      "privileged_names": [
+        "x",
+        "y",
+        "heading",
+        "speed",
+        "vx",
+        "vy",
+        "accel",
+        "yaw_rate",
+        "steer_angle",
+        "slip",
+        "target_idx",
+        "dist_to_goal",
+        "goal_x",
+        "goal_y",
+        "goal_bearing",
+        "dist_to_obstacle",
+        "dist_to_vehicle",
+        "bearing_to_vehicle",
+        "vehicle_speed",
+        "dist_to_moving_vehicle",
+        "bearing_to_moving_vehicle",
+        "moving_vehicle_speed",
+        "dist_to_signal",
+        "signal_state",
+        "signal_steps_remaining",
+        "red_light_violations"
+      ],
+      "reason": "crash",
+      "red_light_violations": 0,
+      "schema_version": 2,
+      "show_goal_beacon": true,
+      "signal_xy": [
+        [
+          50.0,
+          114.0
+        ],
+        [
+          170.0,
+          210.0
+        ],
+        [
+          114.0,
+          210.0
+        ],
+        [
+          202.0,
+          46.0
+        ],
+        [
+          146.0,
+          82.0
+        ],
+        [
+          114.0,
+          150.0
+        ]
+      ],
+      "split": "train",
+      "steps_per_s": 347.11744509694785,
+      "targets": [
+        [
+          54.22354628514355,
+          53.07975438400177
+        ],
+        [
+          77.81321229087129,
+          94.4820001901954
+        ],
+        [
+          14.376814333145,
+          17.38490408361178
+        ]
+      ],
+      "targets_reached": 0,
+      "vector_dim": 73,
+      "wall_s": 0.5041521319999447
+    },
+    {
+      "action_repeat": 1,
+      "block_columns": {
+        "pedestrian_state": [
+          "x",
+          "y",
+          "vx",
+          "vy",
+          "valid"
+        ],
+        "signal_state": [
+          "phase",
+          "timer",
+          "steps_remaining"
+        ],
+        "traffic_state": [
+          "x",
+          "y",
+          "heading",
+          "speed",
+          "parked",
+          "valid"
+        ]
+      },
+      "camera": {
+        "cam_dist": 13.0,
+        "cam_height": 6.5,
+        "fov": 60.0,
+        "look_ahead": 9.0
+      },
+      "collected_at": "2026-10-04T12:42:10",
+      "crash_with": "building",
+      "dt": 0.05,
+      "environment_seed": 20261004,
+      "episode_id": "train/ep_000005",
+      "episode_index": 5,
+      "episode_reward": -138.00483190121756,
+      "episode_seed": 4134696955,
+      "image_size": 64,
+      "length": 545,
+      "max_episode_steps": 1000,
+      "n_targets": 3,
+      "obs_slices": {
+        "dynamics": [
+          32,
+          37
+        ],
+        "lidar": [
+          0,
+          32
+        ],
+        "nav": [
+          37,
+          46
+        ],
+        "pedestrians": [
+          73,
+          73
+        ],
+        "signs": [
+          73,
+          73
+        ],
+        "traffic": [
+          53,
+          73
+        ],
+        "traffic_light": [
+          46,
+          53
+        ]
+      },
+      "path": "episodes/train/ep_000005.npz",
+      "policy": "intermediate",
+      "policy_seed": 4286384978,
+      "privileged_names": [
+        "x",
+        "y",
+        "heading",
+        "speed",
+        "vx",
+        "vy",
+        "accel",
+        "yaw_rate",
+        "steer_angle",
+        "slip",
+        "target_idx",
+        "dist_to_goal",
+        "goal_x",
+        "goal_y",
+        "goal_bearing",
+        "dist_to_obstacle",
+        "dist_to_vehicle",
+        "bearing_to_vehicle",
+        "vehicle_speed",
+        "dist_to_moving_vehicle",
+        "bearing_to_moving_vehicle",
+        "moving_vehicle_speed",
+        "dist_to_signal",
+        "signal_state",
+        "signal_steps_remaining",
+        "red_light_violations"
+      ],
+      "reason": "crash",
+      "red_light_violations": 1,
+      "schema_version": 2,
+      "show_goal_beacon": true,
+      "signal_xy": [
+        [
+          178.0,
+          170.0
+        ],
+        [
+          114.0,
+          238.0
+        ],
+        [
+          146.0,
+          42.0
+        ],
+        [
+          178.0,
+          238.0
+        ],
+        [
+          114.0,
+          98.0
+        ],
+        [
+          202.0,
+          66.0
+        ]
+      ],
+      "split": "train",
+      "steps_per_s": 363.4492797110091,
+      "targets": [
+        [
+          113.5768781181004,
+          77.4129465516822
+        ],
+        [
+          181.0589928538071,
+          30.23216365253534
+        ],
+        [
+          86.03157595557516,
+          22.139917721797282
+        ]
+      ],
+      "targets_reached": 0,
+      "vector_dim": 73,
+      "wall_s": 1.499521475000165
+    },
+    {
+      "action_repeat": 1,
+      "block_columns": {
+        "pedestrian_state": [
+          "x",
+          "y",
+          "vx",
+          "vy",
+          "valid"
+        ],
+        "signal_state": [
+          "phase",
+          "timer",
+          "steps_remaining"
+        ],
+        "traffic_state": [
+          "x",
+          "y",
+          "heading",
+          "speed",
+          "parked",
+          "valid"
+        ]
+      },
+      "camera": {
+        "cam_dist": 13.0,
+        "cam_height": 6.5,
+        "fov": 60.0,
+        "look_ahead": 9.0
+      },
+      "collected_at": "2026-10-04T12:42:10",
+      "crash_with": null,
+      "dt": 0.05,
+      "environment_seed": 20261004,
+      "episode_id": "train/ep_000006",
+      "episode_index": 6,
+      "episode_reward": 442.8641951070156,
+      "episode_seed": 381659138,
+      "image_size": 64,
+      "length": 822,
+      "max_episode_steps": 1000,
+      "n_targets": 3,
+      "obs_slices": {
+        "dynamics": [
+          32,
+          37
+        ],
+        "lidar": [
+          0,
+          32
+        ],
+        "nav": [
+          37,
+          46
+        ],
+        "pedestrians": [
+          73,
+          73
+        ],
+        "signs": [
+          73,
+          73
+        ],
+        "traffic": [
+          53,
+          73
+        ],
+        "traffic_light": [
+          46,
+          53
+        ]
+      },
+      "path": "episodes/train/ep_000006.npz",
+      "policy": "competent",
+      "policy_seed": 56501281,
+      "privileged_names": [
+        "x",
+        "y",
+        "heading",
+        "speed",
+        "vx",
+        "vy",
+        "accel",
+        "yaw_rate",
+        "steer_angle",
+        "slip",
+        "target_idx",
+        "dist_to_goal",
+        "goal_x",
+        "goal_y",
+        "goal_bearing",
+        "dist_to_obstacle",
+        "dist_to_vehicle",
+        "bearing_to_vehicle",
+        "vehicle_speed",
+        "dist_to_moving_vehicle",
+        "bearing_to_moving_vehicle",
+        "moving_vehicle_speed",
+        "dist_to_signal",
+        "signal_state",
+        "signal_steps_remaining",
+        "red_light_violations"
+      ],
+      "reason": "success",
+      "red_light_violations": 0,
+      "schema_version": 2,
+      "show_goal_beacon": true,
+      "signal_xy": [
+        [
+          234.0,
+          54.0
+        ],
+        [
+          198.0,
+          110.0
+        ],
+        [
+          198.0,
+          214.0
+        ],
+        [
+          102.0,
+          174.0
+        ],
+        [
+          142.0,
+          214.0
+        ],
+        [
+          38.0,
+          110.0
+        ]
+      ],
+      "split": "train",
+      "steps_per_s": 361.18190085960805,
+      "targets": [
+        [
+          169.33242467160798,
+          137.9619176496611
+        ],
+        [
+          197.16439903576088,
+          201.12341305271573
+        ],
+        [
+          146.96806784953685,
+          146.136418160096
+        ]
+      ],
+      "targets_reached": 3,
+      "vector_dim": 73,
+      "wall_s": 2.2758615480001936
+    },
+    {
+      "action_repeat": 1,
+      "block_columns": {
+        "pedestrian_state": [
+          "x",
+          "y",
+          "vx",
+          "vy",
+          "valid"
+        ],
+        "signal_state": [
+          "phase",
+          "timer",
+          "steps_remaining"
+        ],
+        "traffic_state": [
+          "x",
+          "y",
+          "heading",
+          "speed",
+          "parked",
+          "valid"
+        ]
+      },
+      "camera": {
+        "cam_dist": 13.0,
+        "cam_height": 6.5,
+        "fov": 60.0,
+        "look_ahead": 9.0
+      },
+      "collected_at": "2026-10-04T12:42:10",
+      "crash_with": "building",
+      "dt": 0.05,
+      "environment_seed": 20261004,
+      "episode_id": "train/ep_000007",
+      "episode_index": 7,
+      "episode_reward": -89.29379437314167,
+      "episode_seed": 2090563835,
+      "image_size": 64,
+      "length": 292,
+      "max_episode_steps": 1000,
+      "n_targets": 3,
+      "obs_slices": {
+        "dynamics": [
+          32,
+          37
+        ],
+        "lidar": [
+          0,
+          32
+        ],
+        "nav": [
+          37,
+          46
+        ],
+        "pedestrians": [
+          73,
+          73
+        ],
+        "signs": [
+          73,
+          73
+        ],
+        "traffic": [
+          53,
+          73
+        ],
+        "traffic_light": [
+          46,
+          53
+        ]
+      },
+      "path": "episodes/train/ep_000007.npz",
+      "policy": "recovery",
+      "policy_seed": 3506545232,
+      "privileged_names": [
+        "x",
+        "y",
+        "heading",
+        "speed",
+        "vx",
+        "vy",
+        "accel",
+        "yaw_rate",
+        "steer_angle",
+        "slip",
+        "target_idx",
+        "dist_to_goal",
+        "goal_x",
+        "goal_y",
+        "goal_bearing",
+        "dist_to_obstacle",
+        "dist_to_vehicle",
+        "bearing_to_vehicle",
+        "vehicle_speed",
+        "dist_to_moving_vehicle",
+        "bearing_to_moving_vehicle",
+        "moving_vehicle_speed",
+        "dist_to_signal",
+        "signal_state",
+        "signal_steps_remaining",
+        "red_light_violations"
+      ],
+      "reason": "crash",
+      "red_light_violations": 0,
+      "schema_version": 2,
+      "show_goal_beacon": true,
+      "signal_xy": [
+        [
+          234.0,
+          90.0
+        ],
+        [
+          162.0,
+          90.0
+        ],
+        [
+          138.0,
+          42.0
+        ],
+        [
+          70.0,
+          206.0
+        ],
+        [
+          234.0,
+          178.0
+        ],
+        [
+          98.0,
+          66.0
+        ]
+      ],
+      "split": "train",
+      "steps_per_s": 391.7086908720152,
+      "targets": [
+        [
+          113.87876271626133,
+          37.38328505413019
+        ],
+        [
+          97.52238817883588,
+          81.57376710725158
+        ],
+        [
+          202.4257348049988,
+          105.76343352992946
+        ]
+      ],
+      "targets_reached": 0,
+      "vector_dim": 73,
+      "wall_s": 0.7454519309999341
+    },
+    {
+      "action_repeat": 1,
+      "block_columns": {
+        "pedestrian_state": [
+          "x",
+          "y",
+          "vx",
+          "vy",
+          "valid"
+        ],
+        "signal_state": [
+          "phase",
+          "timer",
+          "steps_remaining"
+        ],
+        "traffic_state": [
+          "x",
+          "y",
+          "heading",
+          "speed",
+          "parked",
+          "valid"
+        ]
+      },
+      "camera": {
+        "cam_dist": 13.0,
+        "cam_height": 6.5,
+        "fov": 60.0,
+        "look_ahead": 9.0
+      },
+      "collected_at": "2026-10-04T12:42:10",
+      "crash_with": "vehicle",
+      "dt": 0.05,
+      "environment_seed": 20261004,
+      "episode_id": "val/ep_000008",
+      "episode_index": 8,
+      "episode_reward": -63.348921137458,
+      "episode_seed": 3726089814,
+      "image_size": 64,
+      "length": 146,
+      "max_episode_steps": 1000,
+      "n_targets": 3,
+      "obs_slices": {
+        "dynamics": [
+          32,
+          37
+        ],
+        "lidar": [
+          0,
+          32
+        ],
+        "nav": [
+          37,
+          46
+        ],
+        "pedestrians": [
+          73,
+          73
+        ],
+        "signs": [
+          73,
+          73
+        ],
+        "traffic": [
+          53,
+          73
+        ],
+        "traffic_light": [
+          46,
+          53
+        ]
+      },
+      "path": "episodes/val/ep_000008.npz",
+      "policy": "aggressive",
+      "policy_seed": 2277415797,
+      "privileged_names": [
+        "x",
+        "y",
+        "heading",
+        "speed",
+        "vx",
+        "vy",
+        "accel",
+        "yaw_rate",
+        "steer_angle",
+        "slip",
+        "target_idx",
+        "dist_to_goal",
+        "goal_x",
+        "goal_y",
+        "goal_bearing",
+        "dist_to_obstacle",
+        "dist_to_vehicle",
+        "bearing_to_vehicle",
+        "vehicle_speed",
+        "dist_to_moving_vehicle",
+        "bearing_to_moving_vehicle",
+        "moving_vehicle_speed",
+        "dist_to_signal",
+        "signal_state",
+        "signal_steps_remaining",
+        "red_light_violations"
+      ],
+      "reason": "crash",
+      "red_light_violations": 0,
+      "schema_version": 2,
+      "show_goal_beacon": true,
+      "signal_xy": [
+        [
+          230.0,
+          42.0
+        ],
+        [
+          230.0,
+          214.0
+        ],
+        [
+          106.0,
+          142.0
+        ],
+        [
+          182.0,
+          238.0
+        ],
+        [
+          54.0,
+          238.0
+        ],
+        [
+          54.0,
+          110.0
+        ]
+      ],
+      "split": "val",
+      "steps_per_s": 367.15559435953884,
+      "targets": [
+        [
+          17.98874200593669,
+          182.02862152009973
+        ],
+        [
+          46.2847913732704,
+          146.7642818732701
+        ],
+        [
+          102.43364391140622,
+          110.38011058565634
+        ]
+      ],
+      "targets_reached": 0,
+      "vector_dim": 73,
+      "wall_s": 0.397651574000065
+    },
+    {
+      "action_repeat": 1,
+      "block_columns": {
+        "pedestrian_state": [
+          "x",
+          "y",
+          "vx",
+          "vy",
+          "valid"
+        ],
+        "signal_state": [
+          "phase",
+          "timer",
+          "steps_remaining"
+        ],
+        "traffic_state": [
+          "x",
+          "y",
+          "heading",
+          "speed",
+          "parked",
+          "valid"
+        ]
+      },
+      "camera": {
+        "cam_dist": 13.0,
+        "cam_height": 6.5,
+        "fov": 60.0,
+        "look_ahead": 9.0
+      },
+      "collected_at": "2026-10-04T12:42:10",
+      "crash_with": null,
+      "dt": 0.05,
+      "environment_seed": 20261004,
+      "episode_id": "val/ep_000009",
+      "episode_index": 9,
+      "episode_reward": 211.73568417479606,
+      "episode_seed": 449463740,
+      "image_size": 64,
+      "length": 1000,
+      "max_episode_steps": 1000,
+      "n_targets": 3,
+      "obs_slices": {
+        "dynamics": [
+          32,
+          37
+        ],
+        "lidar": [
+          0,
+          32
+        ],
+        "nav": [
+          37,
+          46
+        ],
+        "pedestrians": [
+          73,
+          73
+        ],
+        "signs": [
+          73,
+          73
+        ],
+        "traffic": [
+          53,
+          73
+        ],
+        "traffic_light": [
+          46,
+          53
+        ]
+      },
+      "path": "episodes/val/ep_000009.npz",
+      "policy": "conservative",
+      "policy_seed": 3781463650,
+      "privileged_names": [
+        "x",
+        "y",
+        "heading",
+        "speed",
+        "vx",
+        "vy",
+        "accel",
+        "yaw_rate",
+        "steer_angle",
+        "slip",
+        "target_idx",
+        "dist_to_goal",
+        "goal_x",
+        "goal_y",
+        "goal_bearing",
+        "dist_to_obstacle",
+        "dist_to_vehicle",
+        "bearing_to_vehicle",
+        "vehicle_speed",
+        "dist_to_moving_vehicle",
+        "bearing_to_moving_vehicle",
+        "moving_vehicle_speed",
+        "dist_to_signal",
+        "signal_state",
+        "signal_steps_remaining",
+        "red_light_violations"
+      ],
+      "reason": "timeout",
+      "red_light_violations": 0,
+      "schema_version": 2,
+      "show_goal_beacon": true,
+      "signal_xy": [
+        [
+          42.0,
+          218.0
+        ],
+        [
+          126.0,
+          218.0
+        ],
+        [
+          66.0,
+          46.0
+        ],
+        [
+          182.0,
+          218.0
+        ],
+        [
+          214.0,
+          126.0
+        ],
+        [
+          42.0,
+          98.0
+        ]
+      ],
+      "split": "val",
+      "steps_per_s": 388.5882511119533,
+      "targets": [
+        [
+          49.63875474865956,
+          238.34349141351433
+        ],
+        [
+          46.654229647770244,
+          190.7661765824777
+        ],
+        [
+          129.12469775445106,
+          206.17417561917227
+        ]
+      ],
+      "targets_reached": 2,
+      "vector_dim": 73,
+      "wall_s": 2.573417999999947
+    },
+    {
+      "action_repeat": 1,
+      "block_columns": {
+        "pedestrian_state": [
+          "x",
+          "y",
+          "vx",
+          "vy",
+          "valid"
+        ],
+        "signal_state": [
+          "phase",
+          "timer",
+          "steps_remaining"
+        ],
+        "traffic_state": [
+          "x",
+          "y",
+          "heading",
+          "speed",
+          "parked",
+          "valid"
+        ]
+      },
+      "camera": {
+        "cam_dist": 13.0,
+        "cam_height": 6.5,
+        "fov": 60.0,
+        "look_ahead": 9.0
+      },
+      "collected_at": "2026-10-04T12:42:10",
+      "crash_with": "building",
+      "dt": 0.05,
+      "environment_seed": 20261004,
+      "episode_id": "test/ep_000010",
+      "episode_index": 10,
+      "episode_reward": -106.92887563034618,
+      "episode_seed": 957105644,
+      "image_size": 64,
+      "length": 42,
+      "max_episode_steps": 1000,
+      "n_targets": 3,
+      "obs_slices": {
+        "dynamics": [
+          32,
+          37
+        ],
+        "lidar": [
+          0,
+          32
+        ],
+        "nav": [
+          37,
+          46
+        ],
+        "pedestrians": [
+          73,
+          73
+        ],
+        "signs": [
+          73,
+          73
+        ],
+        "traffic": [
+          53,
+          73
+        ],
+        "traffic_light": [
+          46,
+          53
+        ]
+      },
+      "path": "episodes/test/ep_000010.npz",
+      "policy": "aggressive",
+      "policy_seed": 2861950521,
+      "privileged_names": [
+        "x",
+        "y",
+        "heading",
+        "speed",
+        "vx",
+        "vy",
+        "accel",
+        "yaw_rate",
+        "steer_angle",
+        "slip",
+        "target_idx",
+        "dist_to_goal",
+        "goal_x",
+        "goal_y",
+        "goal_bearing",
+        "dist_to_obstacle",
+        "dist_to_vehicle",
+        "bearing_to_vehicle",
+        "vehicle_speed",
+        "dist_to_moving_vehicle",
+        "bearing_to_moving_vehicle",
+        "moving_vehicle_speed",
+        "dist_to_signal",
+        "signal_state",
+        "signal_steps_remaining",
+        "red_light_violations"
+      ],
+      "reason": "crash",
+      "red_light_violations": 0,
+      "schema_version": 2,
+      "show_goal_beacon": true,
+      "signal_xy": [
+        [
+          38.0,
+          46.0
+        ],
+        [
+          166.0,
+          174.0
+        ],
+        [
+          126.0,
+          122.0
+        ],
+        [
+          202.0,
+          46.0
+        ],
+        [
+          66.0,
+          146.0
+        ],
+        [
+          102.0,
+          214.0
+        ]
+      ],
+      "split": "test",
+      "steps_per_s": 386.45914509967776,
+      "targets": [
+        [
+          29.95625201488352,
+          89.57902371722776
+        ],
+        [
+          113.27336735823138,
+          125.20967450100416
+        ],
+        [
+          202.8305930228545,
+          165.7830059750325
+        ]
+      ],
+      "targets_reached": 0,
+      "vector_dim": 73,
+      "wall_s": 0.10867901699975846
+    },
+    {
+      "action_repeat": 1,
+      "block_columns": {
+        "pedestrian_state": [
+          "x",
+          "y",
+          "vx",
+          "vy",
+          "valid"
+        ],
+        "signal_state": [
+          "phase",
+          "timer",
+          "steps_remaining"
+        ],
+        "traffic_state": [
+          "x",
+          "y",
+          "heading",
+          "speed",
+          "parked",
+          "valid"
+        ]
+      },
+      "camera": {
+        "cam_dist": 13.0,
+        "cam_height": 6.5,
+        "fov": 60.0,
+        "look_ahead": 9.0
+      },
+      "collected_at": "2026-10-04T12:42:10",
+      "crash_with": null,
+      "dt": 0.05,
+      "environment_seed": 20261004,
+      "episode_id": "test/ep_000011",
+      "episode_index": 11,
+      "episode_reward": 297.6641607510606,
+      "episode_seed": 576272518,
+      "image_size": 64,
+      "length": 1000,
+      "max_episode_steps": 1000,
+      "n_targets": 3,
+      "obs_slices": {
+        "dynamics": [
+          32,
+          37
+        ],
+        "lidar": [
+          0,
+          32
+        ],
+        "nav": [
+          37,
+          46
+        ],
+        "pedestrians": [
+          73,
+          73
+        ],
+        "signs": [
+          73,
+          73
+        ],
+        "traffic": [
+          53,
+          73
+        ],
+        "traffic_light": [
+          46,
+          53
+        ]
+      },
+      "path": "episodes/test/ep_000011.npz",
+      "policy": "conservative",
+      "policy_seed": 902658901,
+      "privileged_names": [
+        "x",
+        "y",
+        "heading",
+        "speed",
+        "vx",
+        "vy",
+        "accel",
+        "yaw_rate",
+        "steer_angle",
+        "slip",
+        "target_idx",
+        "dist_to_goal",
+        "goal_x",
+        "goal_y",
+        "goal_bearing",
+        "dist_to_obstacle",
+        "dist_to_vehicle",
+        "bearing_to_vehicle",
+        "vehicle_speed",
+        "dist_to_moving_vehicle",
+        "bearing_to_moving_vehicle",
+        "moving_vehicle_speed",
+        "dist_to_signal",
+        "signal_state",
+        "signal_steps_remaining",
+        "red_light_violations"
+      ],
+      "reason": "timeout",
+      "red_light_violations": 0,
+      "schema_version": 2,
+      "show_goal_beacon": true,
+      "signal_xy": [
+        [
+          134.0,
+          138.0
+        ],
+        [
+          202.0,
+          194.0
+        ],
+        [
+          94.0,
+          114.0
+        ],
+        [
+          94.0,
+          162.0
+        ],
+        [
+          38.0,
+          74.0
+        ],
+        [
+          38.0,
+          138.0
+        ]
+      ],
+      "split": "test",
+      "steps_per_s": 366.5222385907701,
+      "targets": [
+        [
+          130.7756854703731,
+          66.97163893824445
+        ],
+        [
+          125.05662067447834,
+          165.91677914752702
+        ],
+        [
+          82.08012296805416,
+          133.24272848482084
+        ]
+      ],
+      "targets_reached": 2,
+      "vector_dim": 73,
+      "wall_s": 2.72834740899998
+    }
+  ],
+  "n_episodes": 12,
+  "n_transitions": 5492,
+  "obs_slices": {
+    "dynamics": [
+      32,
+      37
+    ],
+    "lidar": [
+      0,
+      32
+    ],
+    "nav": [
+      37,
+      46
+    ],
+    "pedestrians": [
+      73,
+      73
+    ],
+    "signs": [
+      73,
+      73
+    ],
+    "traffic": [
+      53,
+      73
+    ],
+    "traffic_light": [
+      46,
+      53
+    ]
+  },
+  "privileged_names": [
+    "x",
+    "y",
+    "heading",
+    "speed",
+    "vx",
+    "vy",
+    "accel",
+    "yaw_rate",
+    "steer_angle",
+    "slip",
+    "target_idx",
+    "dist_to_goal",
+    "goal_x",
+    "goal_y",
+    "goal_bearing",
+    "dist_to_obstacle",
+    "dist_to_vehicle",
+    "bearing_to_vehicle",
+    "vehicle_speed",
+    "dist_to_moving_vehicle",
+    "bearing_to_moving_vehicle",
+    "moving_vehicle_speed",
+    "dist_to_signal",
+    "signal_state",
+    "signal_steps_remaining",
+    "red_light_violations"
+  ],
+  "schema_version": 2,
+  "splits": {
+    "test": [
+      "test/ep_000010",
+      "test/ep_000011"
+    ],
+    "train": [
+      "train/ep_000000",
+      "train/ep_000001",
+      "train/ep_000002",
+      "train/ep_000003",
+      "train/ep_000004",
+      "train/ep_000005",
+      "train/ep_000006",
+      "train/ep_000007"
+    ],
+    "val": [
+      "val/ep_000008",
+      "val/ep_000009"
+    ]
+  },
+  "throughput": {
+    "bytes_on_disk": 71527804,
+    "bytes_per_transition": 13023.99927166788,
+    "episodes_per_s": 0.7525435325624337,
+    "transitions_per_s": 344.4140900694071,
+    "wall_s": 15.945921372999692
+  },
+  "vector_dim": 73
+}

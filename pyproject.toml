@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lewm-car-nav"
+version = "0.1.0"
+description = "Latent world model experiments on the 3D car-navigation env: dataset collection, probing, planning"
+requires-python = ">=3.9"
+# numpy only, matching the simulator's own policy. The simulator itself is not
+# a package dependency on purpose: it is a sibling checkout found at import
+# time (lewm/paths.py), because its top-level packages are named `env`,
+# `render`, `agents` and installing those into a shared site-packages is a
+# trap. Set CARNAV_ROOT to point somewhere else.
+dependencies = ["numpy>=1.22"]
+
+[project.optional-dependencies]
+render = ["panda3d>=1.10", "pillow>=9"]   # needed only for capture_rgb
+dev = ["panda3d>=1.10", "pillow>=9"]
+
+[tool.setuptools.packages.find]
+include = ["lewm*"]

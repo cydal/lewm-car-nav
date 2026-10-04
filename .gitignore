@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+*.egg-info/
+.DS_Store
+
+# Collected datasets: large, regenerable from a seed and a config, and the
+# committed pilot under docs/lewm_pilot/ is the version meant to be read.
+runs/
+lewm_runs/
+
+# Working notes: the running journal + concept explainers for the article.
+# In-progress and personal, not meant to be reviewed as code history --
+# same convention as dreamer-car-nav/notes/.
+notes/

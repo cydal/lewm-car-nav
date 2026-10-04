@@ -1,0 +1,39 @@
+{
+  "camera": {
+    "cam_dist": 13.0,
+    "cam_height": 6.5,
+    "fov": 60.0,
+    "look_ahead": 9.0
+  },
+  "capture_pedestrian_state": true,
+  "capture_privileged_state": true,
+  "capture_rgb": true,
+  "capture_signal_state": true,
+  "capture_traffic_state": true,
+  "capture_vector": true,
+  "compress": false,
+  "env_kwargs": {},
+  "environment_seed": 20261004,
+  "image_size": 64,
+  "max_steps": null,
+  "n_pedestrian_state": 4,
+  "n_test": 2,
+  "n_traffic_state": 8,
+  "n_train": 8,
+  "n_val": 2,
+  "note": "Stage 0 pilot: instrumentation check, not a training dataset.",
+  "observation_mode": "vector_full",
+  "policy_mix": {
+    "aggressive": 0.25,
+    "competent": 0.25,
+    "conservative": 0.2,
+    "intermediate": 0.1,
+    "noisy_competent": 0.15,
+    "recovery": 0.05
+  },
+  "restricted_drop": [
+    "nav",
+    "dynamics"
+  ],
+  "show_goal_beacon": true
+}

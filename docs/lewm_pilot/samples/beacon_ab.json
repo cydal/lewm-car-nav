@@ -1,0 +1,16 @@
+{
+  "path": "/home/ubuntu/lewm_runs/pilot_001/samples/beacon_ab.png",
+  "steps_measured": 800,
+  "visible_fraction_of_steps": 0.28,
+  "changed_pixel_fraction_when_visible": {
+    "mean": 0.008033631339905754,
+    "max": 0.05373806423611111
+  },
+  "frames_shown": [
+    0.05373806423611111,
+    0.05262586805555555,
+    0.05140516493055555,
+    0.050618489583333336,
+    0.04977756076388889
+  ]
+}
