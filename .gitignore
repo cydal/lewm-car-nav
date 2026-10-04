@@ -12,3 +12,7 @@ lewm_runs/
 # In-progress and personal, not meant to be reviewed as code history --
 # same convention as dreamer-car-nav/notes/.
 notes/
+
+# wandb's local run cache + checkpoints: regenerable, and large.
+wandb/
+checkpoints/
