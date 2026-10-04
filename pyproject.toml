@@ -17,6 +17,10 @@ dependencies = ["numpy>=1.22"]
 [project.optional-dependencies]
 render = ["panda3d>=1.10", "pillow>=9"]   # needed only for capture_rgb
 dev = ["panda3d>=1.10", "pillow>=9"]
+# stage1_vector/ and later stages: training deps for the official LeWM code
+# (github.com/lucas-maes/le-wm), found as a sibling checkout like the
+# simulator. Not needed for collection/validation, only for training.
+stage1 = ["stable-worldmodel[train,format]"]
 
 [tool.setuptools.packages.find]
-include = ["lewm*"]
+include = ["lewm*", "stage1_vector*"]

@@ -3,14 +3,19 @@
 Latent world model (LeWM) experiments on the 3D car-navigation environment.
 **This repository contains no simulator** — it reads
 [`Car-Navigation-Env`](../Car-Navigation-Env) from a sibling checkout and never
-modifies it.
+modifies it. It also reads the **official LeWM code**
+([`le-wm`](../le-wm), Maes et al.) from a second sibling checkout, for the same
+reason and in the same way — we train with their model and loss, not a
+reimplementation of either.
 
-Current state: **stage 0 complete** — dataset instrumentation, a validation
-tool, and a 12-episode pilot that passes 37/37 checks. No model has been
-trained yet, deliberately. See [docs/LEWM_DATASET.md](docs/LEWM_DATASET.md) for
-the schema, the visual setup and the compatibility report, and
+Current state: **stage 0 complete** (dataset instrumentation, a validation
+tool, a 12-episode pilot passing 37/37 checks); **stage 1 (full-vector
+baseline) wired and smoke-tested**, not yet run as an experiment. See
+[docs/LEWM_DATASET.md](docs/LEWM_DATASET.md) for the dataset schema, the
+visual setup and the compatibility report,
 [docs/lewm_pilot/PILOT_REPORT.md](docs/lewm_pilot/PILOT_REPORT.md) for the
-pilot's measured numbers.
+pilot's measured numbers, and [stage1_vector/](stage1_vector/) for the vector
+baseline.
 
 ## Why this is a separate repository
 
@@ -37,9 +42,27 @@ additive, default-off-by-value keyword (`show_goal_beacon`) on its renderer.
 So a fresh clone next to the env repo needs nothing but numpy (plus `panda3d`
 for RGB capture). No install step, no path juggling at the call site.
 
+## Finding the official LeWM code
+
+`stage1_vector/` (and later, pixel-stage work) imports the paper's own model
+code from a second sibling checkout, resolved the same way by
+`lewm.paths.lewm_official_root()` / `add_lewm_official_to_path()`:
+
+1. `LEWM_OFFICIAL_ROOT`, if set
+2. an already-importable `jepa` module
+3. `../le-wm`, the sibling checkout of
+   [`github.com/lucas-maes/le-wm`](https://github.com/lucas-maes/le-wm)
+
+Unlike the simulator, this one has heavy training dependencies
+(`torch`, `lightning`, `hydra-core`, `stable-pretraining`, `stable-worldmodel`,
+`h5py`) — see [stage1_vector/README.md](stage1_vector/README.md) for the
+install command. Resolution is lazy (only `stage1_vector` imports it), so
+`lewm`'s own collection/validation path still needs nothing but numpy.
+
 ```
 world_models/
     Car-Navigation-Env/     the simulator (untouched by this repo)
+    le-wm/                  the paper's own code (untouched by this repo)
     lewm-car-nav/           this repo
 ```
 
@@ -85,10 +108,13 @@ Panda3D itself uses EGL offscreen and does not need X.
 | `tests/test_lewm.py` | compatibility, configuration, alignment, beacon, round trip, validator |
 | `docs/LEWM_DATASET.md` | schema, visual setup, environment variation, compatibility report |
 | `docs/lewm_pilot/` | the committed pilot: report, manifest, validation output, figures |
+| `stage1_vector/` | Stage 1 full-vector baseline: HDF5 export, `VectorJEPA` |
+| `scripts/stage1_smoke.py` | smoke test for stage 1: does the integration actually train |
 
 Later stages (pixel world model, latent probes, CEM+MPC planning) land here as
 sibling packages to `lewm/`, not inside it — the dataset layer is done and
-should stop changing once models depend on its schema.
+should stop changing once models depend on its schema. `stage1_vector/` is
+the first of these.
 
 ## The one guarantee everything is built around
 

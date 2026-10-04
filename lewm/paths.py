@@ -29,6 +29,9 @@ import sys
 ENV_DIR_NAME = "Car-Navigation-Env"
 _MARKERS = ("carnav.py", "env", "render", "baselines")
 
+LEWM_OFFICIAL_DIR_NAME = "le-wm"
+_OFFICIAL_MARKERS = ("jepa.py", "module.py", "train.py")
+
 
 def _looks_like_carnav(root):
     return all(os.path.exists(os.path.join(root, m)) for m in _MARKERS)
@@ -70,6 +73,58 @@ def add_carnav_to_path():
             f"this repository, or set CARNAV_ROOT=/path/to/{ENV_DIR_NAME}, or "
             f"put it on PYTHONPATH. `lewm` records trajectories from that "
             f"environment and does nothing without it.")
+    if root not in sys.path:
+        sys.path.insert(0, root)
+    return root
+
+
+def _looks_like_lewm_official(root):
+    return all(os.path.exists(os.path.join(root, m)) for m in _OFFICIAL_MARKERS)
+
+
+def lewm_official_root():
+    """Absolute path to the `le-wm` (Maes et al.) checkout, or None if unknown.
+
+    Same sibling-checkout arrangement as `carnav_root()`, for the same reason:
+    this is someone else's repository (https://github.com/lucas-maes/le-wm),
+    not a package, and its top-level module names (`jepa`, `module`,
+    `train`) are generic enough that a shared site-packages install would be
+    a trap. We import its `JEPA`/`module` classes unmodified rather than
+    reimplementing the paper; only `stage1_vector/` and later stages need it,
+    so unlike `carnav_root()` this is not bootstrapped at package import time.
+    """
+    override = os.environ.get("LEWM_OFFICIAL_ROOT")
+    if override:
+        root = os.path.abspath(os.path.expanduser(override))
+        if not _looks_like_lewm_official(root):
+            raise RuntimeError(
+                f"LEWM_OFFICIAL_ROOT={override!r} does not look like a "
+                f"{LEWM_OFFICIAL_DIR_NAME} checkout (expected "
+                f"{', '.join(_OFFICIAL_MARKERS)})")
+        return root
+
+    here = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    sibling = os.path.join(os.path.dirname(here), LEWM_OFFICIAL_DIR_NAME)
+    return sibling if _looks_like_lewm_official(sibling) else None
+
+
+def add_lewm_official_to_path():
+    """Put the official `le-wm` checkout on `sys.path`. Idempotent.
+
+    Call this before `import jepa` / `import module` from that repository.
+    """
+    try:
+        import jepa  # noqa: F401
+        return os.path.dirname(os.path.abspath(jepa.__file__))
+    except ImportError:
+        pass
+
+    root = lewm_official_root()
+    if root is None:
+        raise ImportError(
+            f"cannot find the {LEWM_OFFICIAL_DIR_NAME} checkout (official "
+            f"LeWM code, github.com/lucas-maes/le-wm). Expected it next to "
+            f"this repository, or set LEWM_OFFICIAL_ROOT=/path/to/{LEWM_OFFICIAL_DIR_NAME}.")
     if root not in sys.path:
         sys.path.insert(0, root)
     return root
