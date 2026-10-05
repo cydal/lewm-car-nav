@@ -94,7 +94,16 @@ def forward_loss(model, sigreg, batch, history_size, num_preds, lambd):
     pred_loss = (pred_emb - tgt_emb).pow(2).mean()
     reg_loss = sigreg(emb.transpose(0, 1))
     loss = pred_loss + lambd * reg_loss
-    return loss, pred_loss, reg_loss
+
+    # Zero-order-hold baseline (next embedding = current), same embedding
+    # space as pred_loss. Not used in the loss -- logged so val/margin_pct
+    # is visible during training instead of needing a separate
+    # baseline_eval.py pass to find out the combined val/loss (dominated by
+    # sigreg, which only ever gets a gradient on train batches and has no
+    # reason to track anything on held-out data) was the wrong thing to
+    # read the training curve from.
+    copy_loss = (ctx_emb - tgt_emb).pow(2).mean()
+    return loss, pred_loss, reg_loss, copy_loss
 
 
 def main():
@@ -151,7 +160,7 @@ def main():
         t0 = time.time()
         epoch_losses = []
         for batch in train_ds.epoch_batches(args.batch_size, shuffle=True, drop_last=True):
-            loss, pred_loss, reg_loss = forward_loss(
+            loss, pred_loss, reg_loss, _ = forward_loss(
                 model, sigreg, batch, args.history_size, args.num_preds, args.sigreg_weight)
             opt.zero_grad()
             loss.backward()
@@ -172,23 +181,28 @@ def main():
 
         if epoch % args.val_every == 0 or is_last:
             model.eval()
-            val_losses, val_pred, val_reg = [], [], []
+            val_losses, val_pred, val_reg, val_copy = [], [], [], []
             with torch.no_grad():
                 for batch in val_ds.epoch_batches(args.batch_size, shuffle=False, drop_last=False):
-                    loss, pred_loss, reg_loss = forward_loss(
+                    loss, pred_loss, reg_loss, copy_loss = forward_loss(
                         model, sigreg, batch, args.history_size, args.num_preds,
                         args.sigreg_weight)
                     val_losses.append(loss.item())
                     val_pred.append(pred_loss.item())
                     val_reg.append(reg_loss.item())
+                    val_copy.append(copy_loss.item())
             val_mean = sum(val_losses) / len(val_losses)
             val_pred_mean = sum(val_pred) / len(val_pred)
             val_reg_mean = sum(val_reg) / len(val_reg)
-            msg += f"  val/loss={val_mean:.4f}  val/pred_loss={val_pred_mean:.4f}"
+            val_copy_mean = sum(val_copy) / len(val_copy)
+            val_margin_pct = 100 * (val_pred_mean - val_copy_mean) / val_copy_mean
+            msg += (f"  val/loss={val_mean:.4f}  val/pred_loss={val_pred_mean:.4f}"
+                    f"  val/margin={val_margin_pct:+.1f}%")
             if use_wandb:
                 wandb.log({
                     "val/loss": val_mean, "val/pred_loss": val_pred_mean,
-                    "val/sigreg": val_reg_mean, "epoch": epoch,
+                    "val/sigreg": val_reg_mean, "val/copy_loss": val_copy_mean,
+                    "val/margin_pct": val_margin_pct, "epoch": epoch,
                 }, step=global_step)
 
         print(msg)
