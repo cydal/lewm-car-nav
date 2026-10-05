@@ -27,6 +27,10 @@ environment and don't need theirs.
 |---|---|
 | `export_hdf5.py` | converts a `lewm` dataset split into the HDF5 layout `stable_worldmodel` reads |
 | `model.py` | `VectorJEPA` and `build_model()` |
+| `fast_loader.py` | in-memory windowed batching (bypasses `HDF5Dataset`'s per-sample Python overhead) |
+| `wandb_env.py` | loads `WANDB_API_KEY` from `le-wm/.env` |
+| `train.py` | the training loop: wandb logging, periodic validation and checkpointing, `--init-ckpt`/`--start-epoch` for continuing a run |
+| `baseline_eval.py` | compares a checkpoint against trivial "copy" and "batch-mean" baselines -- see `docs/STAGE1_REPORT.md` for why this matters |
 
 ## Why one `.h5` per split, not one dataset `random_split` like `train.py`
 
@@ -42,10 +46,10 @@ with its own `HDF5Dataset` / `DataLoader` — no combined dataset for
 
 ## Status
 
-Wired and smoke-tested (`scripts/stage1_smoke.py`): the export, the model,
-and the loss all run end-to-end on the 8-episode pilot training split, loss
-drops as expected, no NaNs. That is not the Stage 1 experiment — it is the
-same "prove the pipe before spending budget on it" step the brief asked for
-at the dataset layer (section 20), applied to the training integration.
-Running the actual experiment (real dataset size, real training budget,
-reporting whether the model learns the dynamics) is still to come.
+**Complete.** The objective learns real, held-out-validated dynamics that
+scale with data (margin over a trivial baseline: -14% at 300 episodes,
+-43% at 900), and that effect was shown to be real rather than a
+training-length artifact (a mistuned learning rate that overfits never
+clears the baseline at all, at any checkpoint). Full results, the
+evaluation methodology, and what this does and doesn't establish:
+[docs/STAGE1_REPORT.md](../docs/STAGE1_REPORT.md).

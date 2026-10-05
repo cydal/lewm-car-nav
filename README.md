@@ -9,13 +9,15 @@ reason and in the same way — we train with their model and loss, not a
 reimplementation of either.
 
 Current state: **stage 0 complete** (dataset instrumentation, a validation
-tool, a 12-episode pilot passing 37/37 checks); **stage 1 (full-vector
-baseline) wired and smoke-tested**, not yet run as an experiment. See
+tool, a 12-episode pilot passing 37/37 checks); **stage 1 complete** (the
+LeWM objective learns real, held-out-validated dynamics from the full
+vector observation, with a margin over a trivial baseline that scales with
+data: -14% at 300 episodes, -43% at 900). See
 [docs/LEWM_DATASET.md](docs/LEWM_DATASET.md) for the dataset schema, the
 visual setup and the compatibility report,
 [docs/lewm_pilot/PILOT_REPORT.md](docs/lewm_pilot/PILOT_REPORT.md) for the
-pilot's measured numbers, and [stage1_vector/](stage1_vector/) for the vector
-baseline.
+pilot's measured numbers, and [docs/STAGE1_REPORT.md](docs/STAGE1_REPORT.md)
+for the vector baseline's full results.
 
 ## Why this is a separate repository
 
@@ -108,8 +110,10 @@ Panda3D itself uses EGL offscreen and does not need X.
 | `tests/test_lewm.py` | compatibility, configuration, alignment, beacon, round trip, validator |
 | `docs/LEWM_DATASET.md` | schema, visual setup, environment variation, compatibility report |
 | `docs/lewm_pilot/` | the committed pilot: report, manifest, validation output, figures |
-| `stage1_vector/` | Stage 1 full-vector baseline: HDF5 export, `VectorJEPA` |
+| `docs/STAGE1_REPORT.md` | Stage 1 results: model, data, baseline methodology, five training regimes compared |
+| `stage1_vector/` | Stage 1 full-vector baseline: HDF5 export, `VectorJEPA`, training loop, baseline eval |
 | `scripts/stage1_smoke.py` | smoke test for stage 1: does the integration actually train |
+| `scripts/overnight_run.sh` | the batch that produced Stage 1's final numbers (more epochs vs. more data, back to back) |
 
 Later stages (pixel world model, latent probes, CEM+MPC planning) land here as
 sibling packages to `lewm/`, not inside it — the dataset layer is done and
