@@ -131,6 +131,28 @@ Three findings, in the order they were established:
    takeaway regardless: a warm-started run needs its own margin-vs-epoch
    curve, not the donor run's epoch budget copied over.
 
+**Multi-step rollout (`rollout_eval.py`).** The training loss only ever
+asks for one-step-ahead prediction. Feeding the trained predictor its own
+predictions autoregressively (the same loop `JEPA.rollout` uses, flattened
+to a single trace since that method is shaped for CEM's multi-candidate
+sampling) shows the margin over copy *shrinks monotonically* with horizon
+and **crosses to zero and reverses** -- the model becomes worse than doing
+nothing -- around step 21-22 for `bigdata_scratch` and step 18-19 for
+`bigdata_warmstart` (20 Hz: roughly 0.9-1.1 seconds):
+
+| step | scratch margin | warmstart margin |
+|---|---|---|
+| 1 | -43.0% | -42.6% |
+| 10 | -24.7% | -18.8% |
+| 20 | -4.3% | +3.3% |
+| 25 | +6.4% | +13.2% |
+
+Good one-step prediction, trained with a one-step loss, does not imply
+good multi-step rollout, and here it measurably stops helping past about a
+second. This matters directly for Stage 5 (CEM/MPC needs a rollout, not a
+single step) -- planning over this model as-is would be operating past the
+horizon where it's known to help.
+
 Full per-checkpoint numbers: `~/lewm_runs/overnight_logs/07_baseline_summary.log`
 (not committed -- regenerable from the checkpoints, which also aren't
 committed; see section 8). wandb project:
@@ -140,9 +162,12 @@ committed; see section 8). wandb project:
 
 Same spirit as [LEWM_DATASET.md §15](LEWM_DATASET.md#15-what-this-does-not-establish):
 
-- **Single-step prediction only** (`num_preds=1`). Multi-step rollout error
-  (actually planning-relevant) is untested; a model that's good at
-  one-step-ahead can still compound error badly over a horizon.
+- **Single-step prediction only** (`num_preds=1`) was the *training*
+  objective, and that's what the headline margins measure. Multi-step
+  rollout *was* measured (section 6) and does compound badly: the margin
+  reverses around 1 second. Any use of this model beyond one-step
+  prediction needs its own evaluation at the relevant horizon, not an
+  extrapolation from the one-step number.
 - **One seed per configuration.** The margin numbers have no error bars;
   "-40.5% vs -37.9%" (scratch vs warm-start) is suggestive, not proven,
   without repeats.

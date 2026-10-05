@@ -31,6 +31,7 @@ environment and don't need theirs.
 | `wandb_env.py` | loads `WANDB_API_KEY` from `le-wm/.env` |
 | `train.py` | the training loop: wandb logging, periodic validation and checkpointing, `--init-ckpt`/`--start-epoch` for continuing a run |
 | `baseline_eval.py` | compares a checkpoint against trivial "copy" and "batch-mean" baselines -- see `docs/STAGE1_REPORT.md` for why this matters |
+| `rollout_eval.py` | multi-step autoregressive rollout error vs. the same baselines, extended to a horizon |
 
 ## Why one `.h5` per split, not one dataset `random_split` like `train.py`
 
