@@ -42,9 +42,11 @@ def parse_args():
     p.add_argument("--val-h5", required=True)
     p.add_argument("--image-size", type=int, default=64)
     p.add_argument("--patch-size", type=int, default=8)
+    p.add_argument("--vit-size", default="tiny", choices=["tiny", "small", "base", "large"])
     p.add_argument("--history-size", type=int, default=3)
     p.add_argument("--num-preds", type=int, default=1)
-    p.add_argument("--embed-dim", type=int, default=192)
+    p.add_argument("--embed-dim", type=int, default=None,
+                   help="defaults to --vit-size's hidden_size (tiny=192, small=384, ...)")
     p.add_argument("--predictor-depth", type=int, default=6)
     p.add_argument("--predictor-heads", type=int, default=16)
     p.add_argument("--predictor-dim-head", type=int, default=64)
@@ -120,7 +122,7 @@ def main():
 
     model = build_model(
         action_dim=train_ds.action_dim, image_size=args.image_size, patch_size=args.patch_size,
-        embed_dim=args.embed_dim, history_size=args.history_size,
+        vit_size=args.vit_size, embed_dim=args.embed_dim, history_size=args.history_size,
         predictor_depth=args.predictor_depth, predictor_heads=args.predictor_heads,
         predictor_dim_head=args.predictor_dim_head, predictor_mlp_dim=args.predictor_mlp_dim,
     ).to(device)

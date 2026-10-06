@@ -20,12 +20,20 @@ from module import MLP, ARPredictor, Embedder  # noqa: E402
 from stable_pretraining.backbone.utils import vit_hf  # noqa: E402
 
 
+# vit_hf's own size presets (hidden_size, depth, heads) -- embed_dim must
+# match hidden_size exactly, since the CLS token is used as the embedding
+# with no projection in between (JEPA.encode's self.projector maps
+# embed_dim->embed_dim, it doesn't change dimensionality).
+VIT_HIDDEN_SIZE = {"tiny": 192, "small": 384, "base": 768, "large": 1024}
+
+
 def build_model(
     action_dim,
     *,
     image_size=64,
     patch_size=8,
-    embed_dim=192,  # must equal the ViT's hidden_size (vit-tiny: 192)
+    vit_size="tiny",
+    embed_dim=None,  # defaults to vit_size's hidden_size if not given
     history_size=3,
     predictor_depth=6,
     predictor_heads=16,
@@ -33,8 +41,12 @@ def build_model(
     predictor_mlp_dim=2048,
     action_smoothed_dim=32,
 ):
+    embed_dim = embed_dim or VIT_HIDDEN_SIZE[vit_size]
+    assert embed_dim == VIT_HIDDEN_SIZE[vit_size], (
+        f"embed_dim={embed_dim} must equal vit_hf('{vit_size}')'s hidden_size "
+        f"={VIT_HIDDEN_SIZE[vit_size]} -- it's the CLS token's own width.")
     encoder = vit_hf(
-        size="tiny", patch_size=patch_size, image_size=image_size,
+        size=vit_size, patch_size=patch_size, image_size=image_size,
         pretrained=False, use_mask_token=False,
     )
     action_encoder = Embedder(
