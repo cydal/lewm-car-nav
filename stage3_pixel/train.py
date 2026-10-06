@@ -70,6 +70,10 @@ def parse_args():
     p.add_argument("--seed", type=int, default=0)
     p.add_argument("--init-ckpt", default=None)
     p.add_argument("--start-epoch", type=int, default=1)
+    p.add_argument("--amp", action="store_true",
+                   help="mixed precision (autocast). fp16 needs a loss scaler (T4: no "
+                        "native bf16 tensor cores); bf16 doesn't, but needs Ampere+ (A10G/L4/A100)")
+    p.add_argument("--amp-dtype", default="fp16", choices=["fp16", "bf16"])
     return p.parse_args()
 
 
@@ -128,6 +132,14 @@ def main():
     n_params = sum(p.numel() for p in model.parameters())
     print(f"device={device}  model params={n_params}")
 
+    amp_dtype = torch.bfloat16 if args.amp_dtype == "bf16" else torch.float16
+    # GradScaler only does anything (and is only valid) for fp16 -- bf16 has
+    # fp32's exponent range, nothing underflows, so scaling is a no-op there.
+    scaler = torch.amp.GradScaler("cuda", enabled=args.amp and args.amp_dtype == "fp16")
+    if args.amp:
+        print(f"AMP enabled: autocast dtype={args.amp_dtype}, "
+              f"GradScaler={'on' if scaler.is_enabled() else 'off (bf16 needs none)'}")
+
     os.makedirs(args.ckpt_dir, exist_ok=True)
     global_step = 0
 
@@ -138,14 +150,16 @@ def main():
         t0 = time.time()
         epoch_losses = []
         for batch in train_ds.epoch_batches(args.batch_size, shuffle=True, drop_last=True):
-            loss, pred_loss, reg_loss, _ = forward_loss(
-                model, sigreg, batch, args.history_size, args.num_preds, args.sigreg_weight)
+            with torch.autocast(device_type="cuda", dtype=amp_dtype, enabled=args.amp):
+                loss, pred_loss, reg_loss, _ = forward_loss(
+                    model, sigreg, batch, args.history_size, args.num_preds, args.sigreg_weight)
             opt.zero_grad()
-            loss.backward()
+            scaler.scale(loss).backward()
             if args.warmup_steps > 0:
                 for group in opt.param_groups:
                     group["lr"] = args.lr * min(1.0, (global_step + 1) / args.warmup_steps)
-            opt.step()
+            scaler.step(opt)
+            scaler.update()
 
             global_step += 1
             epoch_losses.append(loss.item())
@@ -163,8 +177,9 @@ def main():
             val_losses, val_pred, val_reg, val_copy = [], [], [], []
             with torch.no_grad():
                 for batch in val_ds.epoch_batches(args.batch_size, shuffle=False, drop_last=False):
-                    loss, pred_loss, reg_loss, copy_loss = forward_loss(
-                        model, sigreg, batch, args.history_size, args.num_preds, args.sigreg_weight)
+                    with torch.autocast(device_type="cuda", dtype=amp_dtype, enabled=args.amp):
+                        loss, pred_loss, reg_loss, copy_loss = forward_loss(
+                            model, sigreg, batch, args.history_size, args.num_preds, args.sigreg_weight)
                     val_losses.append(loss.item())
                     val_pred.append(pred_loss.item())
                     val_reg.append(reg_loss.item())
