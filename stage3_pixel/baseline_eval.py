@@ -28,6 +28,7 @@ def main():
     p.add_argument("--vit-size", default="tiny", choices=["tiny", "small", "base", "large"])
     p.add_argument("--history-size", type=int, default=3)
     p.add_argument("--num-preds", type=int, default=1)
+    p.add_argument("--frameskip", type=int, default=1)
     p.add_argument("--embed-dim", type=int, default=None)
     p.add_argument("--predictor-depth", type=int, default=6)
     p.add_argument("--predictor-heads", type=int, default=16)
@@ -38,7 +39,8 @@ def main():
 
     device = "cuda" if torch.cuda.is_available() else "cpu"
     num_steps = args.history_size + args.num_preds
-    ds = WindowedPixelDataset(args.h5, num_steps, args.image_size, device=device)
+    ds = WindowedPixelDataset(args.h5, num_steps, args.image_size, device=device,
+                               frameskip=args.frameskip)
 
     model = build_model(
         action_dim=ds.action_dim, image_size=args.image_size, patch_size=args.patch_size,
