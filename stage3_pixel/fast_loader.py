@@ -39,24 +39,28 @@ class WindowedPixelDataset:
     every one, and groups the F raw actions between each pair of sampled
     frames into a single wider action block (concatenated, not summed or
     averaged -- concatenation is the only one of the three that doesn't
-    throw information away about which sub-step did what) -- matching
-    the official paper's own recipe ("frame-skip of 5, grouping
+    throw information away about which sub-step did what) -- in the
+    spirit of the official paper's recipe ("frame-skip of 5, grouping
     consecutive actions between frames into a single action block"),
-    which exists for two reasons worth having found out empirically
-    first rather than taking on faith: our own measurement showed
-    consecutive raw frames differ by only ~10% (mean pixel diff 0.054-
-    0.062 against within-frame std 0.6) -- a weak, close-to-trivial
+    which the user pointed at for two reasons worth having found out
+    empirically first rather than taken on faith: our own measurement
+    showed consecutive raw frames differ by only ~10% (mean pixel diff
+    0.054-0.062 against within-frame std 0.6) -- a weak, close-to-trivial
     training signal -- and the ViT encode is this project's dominant
-    compute cost, so encoding 1/F as many frames for the same real-world
-    span is a direct, not-yet-tried answer to the compute problem AMP
-    and more GPUs were brought in to work around.
+    compute cost.
+
+    Whether the compute saving materializes depends on `window_stride`
+    (see below), which the paper's text doesn't actually specify -- that
+    detail is this module's own choice, not a confirmed fact about their
+    implementation, and is deliberately exposed as a parameter rather
+    than assumed.
 
     `frameskip=1` (the default) reduces exactly to the original
     behavior -- same `window_starts` formula, same action shape -- so
     every existing caller is unaffected.
     """
 
-    def __init__(self, h5_path, span, image_size=64, device="cpu", frameskip=1):
+    def __init__(self, h5_path, span, image_size=64, device="cpu", frameskip=1, window_stride=None):
         with h5py.File(h5_path, "r") as f:
             pixels = f["pixels"][:]  # (N, H, W, C) uint8, stays on CPU
             action = f["action"][:].astype(np.float32)
@@ -75,19 +79,25 @@ class WindowedPixelDataset:
         # same as frameskip=1 -- but never past it, since n_valid enforces
         # start + span*frameskip - 1 <= length - 1).
         #
-        # Window *starts* also stride by frameskip, not just the frames
-        # within one window -- sliding starts by 1 raw step regardless of
-        # frameskip would give ~length-span*F+1 windows per episode either
-        # way (447 vs 431 for a 450-step episode at F=1 vs F=5), barely
-        # fewer, because almost nothing changes about *how many* windows
-        # exist, only which frames each one samples. Striding starts by F
-        # too is what actually gives the ~F-fold reduction in total
-        # training windows (and so encode calls) per epoch.
+        # `window_stride` (default: frameskip) is a *separate* knob from
+        # frameskip, not the same decision: frameskip controls how far
+        # apart the frames *within* one window are; window_stride controls
+        # how far apart consecutive window *starts* are, i.e. how many
+        # distinct windows exist per epoch. window_stride=frameskip (the
+        # default) gives ~1/frameskip the windows of window_stride=1 for
+        # the same frameskip (447 -> 87 windows on a 450-step episode at
+        # frameskip=5) -- the actual compute saving. window_stride=1 keeps
+        # every possible starting point (same window count as
+        # frameskip=1), trading that saving for denser coverage per epoch.
+        # Which one the paper actually does isn't confirmed from the text
+        # we have -- this is deliberately a knob, not an assumption baked
+        # in, so both are one flag apart to compare.
+        stride = window_stride if window_stride is not None else frameskip
         starts = []
         for length, offset in zip(ep_len, ep_offset):
             n_valid = int(length) - span * frameskip + 1
             if n_valid > 0:
-                starts.append(np.arange(offset, offset + n_valid, frameskip, dtype=np.int64))
+                starts.append(np.arange(offset, offset + n_valid, stride, dtype=np.int64))
         self.window_starts = torch.from_numpy(np.concatenate(starts))  # CPU
 
         self.raw_action_dim = action.shape[1]

@@ -48,6 +48,12 @@ def parse_args():
     p.add_argument("--frameskip", type=int, default=1,
                    help="sample pixels every N raw steps, group the N raw actions "
                         "between frames into one block (paper default: 5)")
+    p.add_argument("--window-stride", type=int, default=None,
+                   help="spacing between window starts; defaults to --frameskip "
+                        "(fewer, more spread-out windows -- the compute saving). "
+                        "Set to 1 for dense/overlapping windows at the same "
+                        "frameskip -- same window count as frameskip=1, no "
+                        "compute saving, tests whether that saving cost something.")
     p.add_argument("--embed-dim", type=int, default=None,
                    help="defaults to --vit-size's hidden_size (tiny=192, small=384, ...)")
     p.add_argument("--predictor-depth", type=int, default=6)
@@ -119,9 +125,9 @@ def main():
     device = "cuda" if torch.cuda.is_available() else "cpu"
 
     train_ds = WindowedPixelDataset(args.train_h5, num_steps, args.image_size, device=device,
-                                     frameskip=args.frameskip)
+                                     frameskip=args.frameskip, window_stride=args.window_stride)
     val_ds = WindowedPixelDataset(args.val_h5, num_steps, args.image_size, device=device,
-                                   frameskip=args.frameskip)
+                                   frameskip=args.frameskip, window_stride=args.window_stride)
     print(f"train windows: {len(train_ds)}  val windows: {len(val_ds)}  "
           f"(image_size={args.image_size}, action_dim={train_ds.action_dim})")
 
