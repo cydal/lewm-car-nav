@@ -3,8 +3,14 @@ physical quantity's representation emerge, if it does at all?
 
 Loads the val episodes once (reused across every checkpoint -- only the
 model weights change), and the untrained baseline once (same seed every
-time, no reason to recompute it per checkpoint).
+time, no reason to recompute it per checkpoint). `action_dim` doesn't
+matter here and isn't exposed as a flag: `encode_episodes` only ever
+calls the frame encoder (`model.encode({"pixels": ...})`), never the
+action-conditioned predictor, so this is unaffected by a checkpoint's
+training-time frameskip/window_stride -- `vit_size` is the only model
+shape knob that matters for probing.
 """
+import argparse
 import glob
 import os
 import re
@@ -25,10 +31,6 @@ from stage3_pixel.probe_eval import (  # noqa: E402
 
 add_lewm_official_to_path()
 from utils import get_img_preprocessor  # noqa: E402
-
-CKPT_DIR = os.path.expanduser("~/lewm_runs/stage3_checkpoints/stage3_pixel_gpu0_continue")
-DATASET_ROOT = os.path.expanduser("~/lewm_runs/stage1_vector_900_pixels")
-N_EPISODES = 150
 
 
 def r2_per_target(train_set, val_set):
@@ -53,14 +55,28 @@ def r2_per_target(train_set, val_set):
 
 
 def main():
+    p = argparse.ArgumentParser(description=__doc__)
+    p.add_argument("--ckpt-dir", required=True)
+    p.add_argument("--dataset-root", required=True)
+    p.add_argument("--vit-size", default="tiny", choices=["tiny", "small", "base", "large"])
+    p.add_argument("--action-dim", type=int, default=3,
+                   help="must match the checkpoint's raw_action_dim * frameskip used at "
+                        "train time -- only affects the unused action_encoder's shape, "
+                        "irrelevant to probing itself, but load_state_dict still needs it")
+    p.add_argument("--n-episodes", type=int, default=150)
+    args = p.parse_args()
+
     device = "cuda" if torch.cuda.is_available() else "cpu"
-    ds = Dataset(DATASET_ROOT)
-    episode_ids = ds.episode_ids("val")[:N_EPISODES]
+    ds = Dataset(args.dataset_root)
+    episode_ids = ds.episode_ids("val")[:args.n_episodes]
     transform = get_img_preprocessor(source="pixels", target="pixels", img_size=64)
+
+    def build():
+        return build_model(action_dim=args.action_dim, vit_size=args.vit_size).to(device).eval()
 
     # Untrained baseline, once.
     torch.manual_seed(0)
-    untrained = build_model(action_dim=3).to(device).eval()
+    untrained = build()
     u_results = encode_episodes(untrained, episode_ids, ds, transform, device)
     u_train, u_val = split_episodes(u_results)
     untrained_r2 = r2_per_target(u_train, u_val)
@@ -68,7 +84,7 @@ def main():
     print()
 
     ckpts = sorted(
-        glob.glob(os.path.join(CKPT_DIR, "weights_epoch_*.pt")),
+        glob.glob(os.path.join(args.ckpt_dir, "weights_epoch_*.pt")),
         key=lambda p: int(re.search(r"epoch_(\d+)", p).group(1)),
     )
 
@@ -76,7 +92,7 @@ def main():
     print(f"{'epoch':>6}" + "".join(f"{n:>16}" for n in names))
     for ckpt in ckpts:
         epoch = int(re.search(r"epoch_(\d+)", ckpt).group(1))
-        model = build_model(action_dim=3).to(device).eval()
+        model = build()
         model.load_state_dict(torch.load(ckpt, map_location=device))
         results = encode_episodes(model, episode_ids, ds, transform, device)
         train_set, val_set = split_episodes(results)
