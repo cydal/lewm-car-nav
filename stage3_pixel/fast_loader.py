@@ -61,13 +61,29 @@ class WindowedPixelDataset:
     """
 
     def __init__(self, h5_path, span, image_size=64, device="cpu", frameskip=1, window_stride=None):
+        # For very large datasets, keep the HDF5 file open and read pixels on-demand.
+        # For smaller ones, load upfront (faster). Threshold: 30GB available RAM, so
+        # if pixels > 20GB, use lazy loading.
+        self.h5_path = h5_path
+        h5_file_temp = h5py.File(h5_path, "r")
+        pixels_size_gb = h5_file_temp["pixels"].nbytes / 1e9
+        h5_file_temp.close()
+
+        if pixels_size_gb > 20:
+            # Lazy loading: keep file open
+            self.h5_file = h5py.File(h5_path, "r")
+            self.pixels = None  # Will read on-demand
+        else:
+            # Eager loading: read upfront
+            with h5py.File(h5_path, "r") as f:
+                self.pixels = torch.from_numpy(f["pixels"][:])
+            self.h5_file = None
+
         with h5py.File(h5_path, "r") as f:
-            pixels = f["pixels"][:]  # (N, H, W, C) uint8, stays on CPU
             action = f["action"][:].astype(np.float32)
             ep_len = f["ep_len"][:]
             ep_offset = f["ep_offset"][:]
 
-        self.pixels = torch.from_numpy(pixels)  # CPU, uint8
         self.action = torch.from_numpy(action).to(device)  # tiny, fine on GPU
         self.span = span
         self.frameskip = frameskip
@@ -107,8 +123,20 @@ class WindowedPixelDataset:
         return self.window_starts.shape[0]
 
     def _load_pixels(self, idx):
-        """CPU gather + permute, then one transfer, then normalize on `device`."""
-        batch = self.pixels[idx]  # (B, span, H, W, C) uint8, CPU
+        """Load pixels either from memory or from HDF5, depending on size."""
+        if self.pixels is not None:
+            # Eager-loaded: normal tensor indexing
+            batch = self.pixels[idx]
+        else:
+            # Lazy-loaded: read individual frames sequentially (HDF5 fancy indexing is slow/broken)
+            idx_np = idx.numpy()  # (B, span)
+            b, span = idx_np.shape
+            batch_list = []
+            for frame_idx in idx_np.reshape(-1):
+                batch_list.append(self.h5_file["pixels"][int(frame_idx)])
+            batch_flat = np.array(batch_list)
+            batch = torch.from_numpy(batch_flat).reshape(b, span, 64, 64, 3)
+
         b, t, h, w, c = batch.shape
         batch = batch.permute(0, 1, 4, 2, 3).reshape(b * t, c, h, w)  # (B*span, C, H, W)
         batch = batch.to(self.device)
