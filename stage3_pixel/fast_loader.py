@@ -19,6 +19,8 @@ does that permute for its own callers).
 
 import os
 import sys
+import threading
+import queue
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -151,13 +153,37 @@ class WindowedPixelDataset:
         pixel_offsets = torch.arange(self.span) * self.frameskip
         action_offsets = torch.arange(self.span * self.frameskip)
 
-        for b in range(n_batches):
-            sel = order[b * batch_size: (b + 1) * batch_size]
-            starts = self.window_starts[sel]                                    # (B,) CPU
-            pixel_idx = starts.unsqueeze(1) + pixel_offsets.unsqueeze(0)        # (B, span)
-            pixels = self._load_pixels(pixel_idx)
+        # Async prefetch: load next batch in background thread while current batch trains
+        batch_queue = queue.Queue(maxsize=2)
+        stop_event = threading.Event()
 
-            action_idx = starts.unsqueeze(1) + action_offsets.unsqueeze(0)      # (B, span*F)
-            raw_action = self.action[action_idx.to(self.action.device)]        # (B, span*F, raw_dim)
-            action = raw_action.reshape(raw_action.shape[0], self.span, self.action_dim)
-            yield {"pixels": pixels, "action": action}
+        def prefetch_worker():
+            """Background thread: load and normalize batches into the queue."""
+            try:
+                for b in range(n_batches):
+                    if stop_event.is_set():
+                        break
+                    sel = order[b * batch_size: (b + 1) * batch_size]
+                    starts = self.window_starts[sel]
+                    pixel_idx = starts.unsqueeze(1) + pixel_offsets.unsqueeze(0)
+                    pixels = self._load_pixels(pixel_idx)
+
+                    action_idx = starts.unsqueeze(1) + action_offsets.unsqueeze(0)
+                    raw_action = self.action[action_idx.to(self.action.device)]
+                    action = raw_action.reshape(raw_action.shape[0], self.span, self.action_dim)
+                    batch_queue.put({"pixels": pixels, "action": action})
+            finally:
+                batch_queue.put(None)  # Signal end of epoch
+
+        thread = threading.Thread(target=prefetch_worker, daemon=True)
+        thread.start()
+
+        try:
+            for _ in range(n_batches):
+                batch = batch_queue.get()
+                if batch is None:
+                    break
+                yield batch
+        finally:
+            stop_event.set()
+            thread.join(timeout=5)
