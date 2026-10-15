@@ -15,6 +15,7 @@ import glob
 import os
 import re
 import sys
+import time
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -28,6 +29,7 @@ from stage3_pixel.model import build_model  # noqa: E402
 from stage3_pixel.probe_eval import (  # noqa: E402
     build_targets, encode_episodes, split_episodes, stack,
 )
+from results.store import append as append_result  # noqa: E402
 
 add_lewm_official_to_path()
 from utils import get_img_preprocessor  # noqa: E402
@@ -64,7 +66,20 @@ def main():
                         "train time -- only affects the unused action_encoder's shape, "
                         "irrelevant to probing itself, but load_state_dict still needs it")
     p.add_argument("--n-episodes", type=int, default=150)
+    p.add_argument("--run-name", default=None,
+                   help="defaults to --ckpt-dir's basename; identifies this run in "
+                        "results/probe_results.jsonl for later cross-run comparison")
+    p.add_argument("--dataset-scale", type=int, default=None,
+                   help="episode count the checkpoints were trained on, e.g. 900 or 8100 "
+                        "-- stored as metadata only, not inferred")
+    p.add_argument("--frameskip", type=int, default=None)
+    p.add_argument("--window-stride", type=int, default=None)
+    p.add_argument("--seed", type=int, default=None,
+                   help="training seed the checkpoints were produced with (metadata only)")
+    p.add_argument("--no-save", action="store_true",
+                   help="skip appending to results/probe_results.jsonl")
     args = p.parse_args()
+    run_name = args.run_name or os.path.basename(os.path.normpath(args.ckpt_dir))
 
     device = "cuda" if torch.cuda.is_available() else "cpu"
     ds = Dataset(args.dataset_root)
@@ -99,6 +114,22 @@ def main():
         r2 = r2_per_target(train_set, val_set)
         gaps = {k: r2[k] - untrained_r2[k] for k in names}
         print(f"{epoch:6d}" + "".join(f"{gaps[n]:+16.3f}" for n in names))
+
+        if not args.no_save:
+            append_result({
+                "run_name": run_name,
+                "epoch": epoch,
+                "dataset_scale": args.dataset_scale,
+                "frameskip": args.frameskip,
+                "window_stride": args.window_stride,
+                "seed": args.seed,
+                "vit_size": args.vit_size,
+                "n_episodes": args.n_episodes,
+                "r2_gap": gaps,
+                "r2_raw": r2,
+                "untrained_r2": untrained_r2,
+                "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+            })
 
 
 if __name__ == "__main__":
