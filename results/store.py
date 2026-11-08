@@ -21,9 +21,20 @@ def append(record):
         f.write(json.dumps(record, sort_keys=True) + "\n")
 
 
+def _dedup_key(rec):
+    """(run_name, epoch) alone collides across record *kinds* -- the same
+    checkpoint gets probed by probe_over_time.py (no 'kind', one record per
+    epoch covering every target), probe_embedding_geometry.py
+    ('kind': 'geometry'), and probe_pc_alignment.py ('kind': 'pc_alignment',
+    one record per target per epoch). Dedup must key on all of
+    (run_name, epoch, kind, target) or different probes silently clobber
+    each other's entries for the same checkpoint."""
+    return (rec["run_name"], rec["epoch"], rec.get("kind", "probe"), rec.get("target"))
+
+
 def load(dedup_latest=True):
     """Returns list of records. If dedup_latest, keeps only the last-written
-    line per (run_name, epoch) -- later appends win."""
+    line per dedup key -- later appends win."""
     if not os.path.exists(PATH):
         return []
     records = {}
@@ -34,9 +45,8 @@ def load(dedup_latest=True):
             if not line:
                 continue
             rec = json.loads(line)
-            key = (rec["run_name"], rec["epoch"])
             if dedup_latest:
-                records[key] = rec
+                records[_dedup_key(rec)] = rec
             else:
                 order.append(rec)
     if dedup_latest:

@@ -23,7 +23,7 @@ def main():
                    help="restrict to these run_names; default: all")
     args = p.parse_args()
 
-    records = load()
+    records = [r for r in load() if r.get("kind", "probe") == "probe"]
     if not records:
         print("no results yet -- run probe_over_time.py with --run-name first")
         return

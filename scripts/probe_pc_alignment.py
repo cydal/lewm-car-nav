@@ -18,6 +18,7 @@ destruction.
 """
 import argparse
 import os
+import time
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -33,6 +34,7 @@ from stage3_pixel.model import build_model  # noqa: E402
 from stage3_pixel.probe_eval import (  # noqa: E402
     build_targets, encode_episodes, split_episodes, stack,
 )
+from results.store import append as append_result  # noqa: E402
 
 add_lewm_official_to_path()
 from utils import get_img_preprocessor  # noqa: E402
@@ -71,7 +73,10 @@ def main():
     p.add_argument("--n-episodes", type=int, default=150)
     p.add_argument("--targets", nargs="+", default=["heading", "goal_bearing"])
     p.add_argument("--ks", type=int, nargs="+", default=[5, 10, 20, 50])
+    p.add_argument("--run-name", default=None)
+    p.add_argument("--no-save", action="store_true")
     args = p.parse_args()
+    run_name = args.run_name or os.path.basename(os.path.normpath(args.ckpt_dir))
 
     device = "cuda" if torch.cuda.is_available() else "cpu"
     ds = Dataset(args.dataset_root)
@@ -95,10 +100,22 @@ def main():
 
         for name in args.targets:
             row = f"{epoch:6d}{name:>14}"
+            r2_by_k = {}
             for k in ks:
                 r2 = r2_for_k(emb_tr, emb_val, targets_tr[name], targets_val[name], k)
                 row += f"{r2:10.3f}"
+                r2_by_k[str(k) if k else "full"] = r2
             print(row)
+
+            if not args.no_save:
+                append_result({
+                    "run_name": run_name,
+                    "epoch": epoch,
+                    "kind": "pc_alignment",
+                    "target": name,
+                    "r2_by_k": r2_by_k,
+                    "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+                })
 
 
 if __name__ == "__main__":
